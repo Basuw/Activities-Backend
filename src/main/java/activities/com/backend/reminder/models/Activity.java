@@ -1,11 +1,11 @@
 package activities.com.backend.reminder.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Entity
 @Getter
@@ -14,6 +14,8 @@ import lombok.Setter;
 @Table(name = "activity", schema = "reminder")
 public class Activity {
     @Id
+    @GeneratedValue(strategy = SEQUENCE,generator = "activitySequence")
+    @SequenceGenerator(name = "activitySequence", sequenceName = "reminder.activity_sequence")
     private int id;
     private String name;
     private String description;
