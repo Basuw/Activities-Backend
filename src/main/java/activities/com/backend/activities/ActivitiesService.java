@@ -1,7 +1,6 @@
-package activities.com.backend.reminder;
+package activities.com.backend.activities;
 
-import activities.com.backend.reminder.models.Activity;
-import activities.com.backend.reminder.repositories.ActivityRepository;
+import activities.com.backend.activities.repositories.ActivityRepository;
 import org.springframework.stereotype.Service;
 
 @Service

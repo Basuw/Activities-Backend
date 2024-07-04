@@ -1,4 +1,4 @@
-package activities.com.backend.reminder.models;
+package activities.com.backend.activities.models;
 
 
 import jakarta.persistence.*;

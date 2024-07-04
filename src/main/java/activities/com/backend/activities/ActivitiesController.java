@@ -1,13 +1,13 @@
-package activities.com.backend.reminder;
+package activities.com.backend.activities;
 
-import activities.com.backend.reminder.models.Achieve;
-import activities.com.backend.reminder.models.Activity;
-import activities.com.backend.reminder.models.Save;
-import activities.com.backend.reminder.models.User;
-import activities.com.backend.reminder.repositories.AchieveRepository;
-import activities.com.backend.reminder.repositories.ActivityRepository;
-import activities.com.backend.reminder.repositories.SaveRepository;
-import activities.com.backend.reminder.repositories.UserRepository;
+import activities.com.backend.activities.models.Achieve;
+import activities.com.backend.activities.models.Activity;
+import activities.com.backend.activities.models.Save;
+import activities.com.backend.activities.models.User;
+import activities.com.backend.activities.repositories.AchieveRepository;
+import activities.com.backend.activities.repositories.ActivityRepository;
+import activities.com.backend.activities.repositories.SaveRepository;
+import activities.com.backend.activities.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -80,7 +80,7 @@ public class ActivitiesController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable long id){
+    public ResponseEntity< User> getUserById(@PathVariable long id){
         try {
             return ResponseEntity.ok().body(this.userRepository.findById(id));
         }catch (RuntimeException exception){

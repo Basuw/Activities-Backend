@@ -1,4 +1,4 @@
-package activities.com.backend.reminder.models;
+package activities.com.backend.activities.models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 

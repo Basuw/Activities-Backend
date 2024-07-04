@@ -1,4 +1,4 @@
-package activities.com.backend.reminder.exceptions;
+package activities.com.backend.activities.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;

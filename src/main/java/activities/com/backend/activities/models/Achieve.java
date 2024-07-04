@@ -1,11 +1,9 @@
-package activities.com.backend.reminder.models;
+package activities.com.backend.activities.models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 
 import java.util.Date;
 
@@ -15,7 +13,7 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "achieve", schema = "reminder")
+@Table(name = "ActivityDone", schema = "activities")
 public class Achieve {
     @Id
     @GeneratedValue(strategy = SEQUENCE,generator = "achieveSequence")

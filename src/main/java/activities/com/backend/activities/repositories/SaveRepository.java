@@ -1,7 +1,6 @@
-package activities.com.backend.reminder.repositories;
+package activities.com.backend.activities.repositories;
 
-import activities.com.backend.reminder.models.Achieve;
-import activities.com.backend.reminder.models.Save;
+import activities.com.backend.activities.models.Save;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

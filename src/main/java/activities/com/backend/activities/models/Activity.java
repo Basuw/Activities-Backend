@@ -1,4 +1,4 @@
-package activities.com.backend.reminder.models;
+package activities.com.backend.activities.models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,21 +11,22 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "activity", schema = "reminder")
+@Table(name = "Activity", schema = "activities")
 public class Activity {
     @Id
     @GeneratedValue(strategy = SEQUENCE,generator = "activitySequence")
-    @SequenceGenerator(name = "activitySequence", sequenceName = "reminder.activity_sequence")
+    @SequenceGenerator(name = "activitySequence", sequenceName = "activities.activity_sequence")
     private int id;
     private String name;
     private String description;
-    private String unit;
+    private String unity;
     private String icon;
-    public Activity(int id, String name, String description, String unit, String icon){
+
+    public Activity(int id, String name, String description, String unity, String icon){
         this.id=id;
         this.name = name;
         this.description = description;
-        this.unit = unit;
+        this.unity = unity;
         this.icon = icon;
     }
 }

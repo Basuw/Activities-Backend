@@ -1,4 +1,4 @@
-package activities.com.backend.reminder.exceptions;
+package activities.com.backend.activities.exceptions;
 
 public class ActivitiesExceptions extends
         RuntimeException {
