@@ -1,12 +1,12 @@
 package activities.com.backend.activities;
 
-import activities.com.backend.activities.models.Achieve;
+import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.models.Activity;
-import activities.com.backend.activities.models.Save;
+import activities.com.backend.activities.models.ActivitySave;
 import activities.com.backend.activities.models.User;
-import activities.com.backend.activities.repositories.AchieveRepository;
+import activities.com.backend.activities.repositories.ActivityDoneRepository;
 import activities.com.backend.activities.repositories.ActivityRepository;
-import activities.com.backend.activities.repositories.SaveRepository;
+import activities.com.backend.activities.repositories.ActivitySaveRepository;
 import activities.com.backend.activities.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +21,15 @@ public class ActivitiesController {
 
     private final ActivityRepository activityRepository;
     private final UserRepository userRepository;
-    private final AchieveRepository achieveRepository;
-    private final SaveRepository saveRepository;
+    private final ActivityDoneRepository activityDoneRepository;
+    private final ActivitySaveRepository activitySaveRepository;
 
     @Autowired
-    public ActivitiesController(ActivityRepository activityRepository, UserRepository userRepository, AchieveRepository achieveRepository,SaveRepository saveRepository){
+    public ActivitiesController(ActivityRepository activityRepository, UserRepository userRepository, ActivityDoneRepository activityDoneRepository, ActivitySaveRepository activitySaveRepository){
         this.activityRepository = activityRepository;
         this.userRepository = userRepository;
-        this.achieveRepository = achieveRepository;
-        this.saveRepository = saveRepository;
+        this.activityDoneRepository = activityDoneRepository;
+        this.activitySaveRepository = activitySaveRepository;
     }
 
     // ACTIVITY
@@ -105,90 +105,94 @@ public class ActivitiesController {
         }
         return ResponseEntity.ok().body("deleted "+id);
     }
-    // ACHIEVE
-    @GetMapping("/achieve")
-    public List<Achieve> getAllAchieve(@RequestParam("usrId") long usrId){
+
+
+    //------- ACHIEVE ---------\\
+/*    @GetMapping("/achieve/{user_id}")
+    public List<ActivityDone> getAllAchieve(@RequestParam("userId") long usrId){
         try {
-            return this.achieveRepository.findByUsrId(usrId);
+            return this.activityDoneRepository.findByUserId(usrId);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting all achieve by user");
         }
-    }
+    }*/
     @GetMapping("/achieve/all")
-    public List<Achieve> getAllAchieveByUser(){
+    public List<ActivityDone> getAllAchieveByUser(){
         try {
-            return this.achieveRepository.findAll();
+            return this.activityDoneRepository.findAll();
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting all achieve by user");
         }
     }
 
     @GetMapping("/achieve/{id}")
-    public ResponseEntity<Achieve> getAchieveById(@PathVariable long id){
+    public ResponseEntity<ActivityDone> getAchieveById(@PathVariable long id){
         try {
-            return ResponseEntity.ok().body(this.achieveRepository.findById(id));
+            return ResponseEntity.ok().body(this.activityDoneRepository.findById(id));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting user with id : "+id);
         }
     }
     @PostMapping("/achieve")
-    public ResponseEntity<String> addAchieve(@RequestBody Achieve achieve){
+    public ResponseEntity<String> addAchieve(@RequestBody ActivityDone activityDone){
         try {
-            achieve.setDateAchieved(new Date());
-            this.achieveRepository.save(achieve);
+            activityDone.setDoneOn(new Date());
+            this.activityDoneRepository.save(activityDone);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding user");
         }
-        return ResponseEntity.ok().body("added "+achieve);
+        return ResponseEntity.ok().body("added "+ activityDone);
     }
     @DeleteMapping("/achieve/{id}")
     public ResponseEntity<String> deleteAchieve(@PathVariable long id){
         try {
-            this.achieveRepository.deleteById(id);
+            this.activityDoneRepository.deleteById(id);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding achieve");
         }
         return ResponseEntity.ok().body("deleted "+id);
     }
-    // SAVE
-    @GetMapping("/save/usrid")
-    public List<Save> getAllASaveByUserId(@RequestParam("usrId") long usrId){
+
+
+    //-------- SAVE ---------\\
+/*    @GetMapping("/save/{user_id}")
+    public List<ActivitySave> getAllASaveByUserId(@RequestParam("usrId") long usrId){
         try {
-            return this.saveRepository.findByUsrId(usrId);
+            return this.activitySaveRepository.findByUsrId(usrId);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting all save by user");
         }
-    }
+    }*/
     @GetMapping("/save/all")
-    public List<Save> getAllSave(){
+    public List<ActivitySave> getAllSave(){
         try {
-            return this.saveRepository.findAll();
+            return this.activitySaveRepository.findAll();
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting all save by user");
         }
     }
 
     @GetMapping("/save/{id}")
-    public ResponseEntity<Save> getSaveById(@PathVariable long id){
+    public ResponseEntity<ActivitySave> getSaveById(@PathVariable long id){
         try {
-            return ResponseEntity.ok().body(this.saveRepository.findById(id));
+            return ResponseEntity.ok().body(this.activitySaveRepository.findById(id));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting save with id : "+id);
         }
     }
     @PostMapping("/save")
-    public ResponseEntity<String> addSave(@RequestBody Save save){
+    public ResponseEntity<String> addSave(@RequestBody ActivitySave activitySave){
         try {
-            this.saveRepository.save(save);
+            this.activitySaveRepository.save(activitySave);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding user");
         }
-        return ResponseEntity.ok().body("added "+save);
+        return ResponseEntity.ok().body("added "+ activitySave);
     }
     @DeleteMapping("/save/{id}")
     public ResponseEntity<String> deleteSave(@PathVariable long id){
         try {
-            this.saveRepository.deleteById(id);
+            this.activitySaveRepository.deleteById(id);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding save");
         }

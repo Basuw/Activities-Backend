@@ -14,22 +14,19 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Setter
 @NoArgsConstructor
 @Table(name = "ActivityDone", schema = "activities")
-public class Achieve {
+public class ActivityDone {
     @Id
     @GeneratedValue(strategy = SEQUENCE,generator = "achieveSequence")
-    @SequenceGenerator(name = "achieveSequence", sequenceName = "reminder.achieve_sequence")
+    @SequenceGenerator(name = "achieveSequence", sequenceName = "activities.activity_done_sequence")
     private int id;
-    private int actId;
-    private int usrId;
+    private int activityDoneId;
     private float achievement;
-    private Date dateAchieved;
+    private Date doneOn;
 
-    public Achieve(int id,int actId,int usrId,float achievement,Date dateAchieved){
-
+    public ActivityDone(int id, int activityDoneId, float achievement, Date doneOn){
         this.id = id;
-        this.actId = actId;
-        this.usrId = usrId;
+        this.activityDoneId = activityDoneId;
         this.achievement = achievement;
-        this.dateAchieved = dateAchieved;
+        this.doneOn = doneOn;
     }
 }

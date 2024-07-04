@@ -9,11 +9,12 @@ CREATE TABLE public."User" (
     mail VARCHAR,
     password VARCHAR,
     role VARCHAR,
-    created_at TIMESTAMP,
+    created_on TIMESTAMP,
     birth_date TIMESTAMP,
     weight NUMERIC,
     height NUMERIC,
-    fat NUMERIC
+    fat NUMERIC,
+    target_weight NUMERIC
 );
 
 CREATE TABLE activities."Activity" (
@@ -28,7 +29,7 @@ CREATE TABLE activities."ActivitySave" (
     id INTEGER PRIMARY KEY,
     activity_id INTEGER,
     user_id INTEGER,
-    frequence INTEGER,
+    frequency INTEGER,
     objective INTEGER,
     FOREIGN KEY (activity_id) REFERENCES activities."Activity" (id),
     FOREIGN KEY (user_id) REFERENCES public."User" (id)
@@ -37,7 +38,9 @@ CREATE TABLE activities."ActivitySave" (
 CREATE TABLE activities."ActivityDone" (
     id INTEGER PRIMARY KEY,
     done_on TIMESTAMP,
-    achievement INTEGER
+    achievement INTEGER,
+    activity_save_id INTEGER,
+    FOREIGN KEY (activity_save_id) REFERENCES activities."ActivitySave" (id)
 );
 
 CREATE TABLE workout."Workout" (
