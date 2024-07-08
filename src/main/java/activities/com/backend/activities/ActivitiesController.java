@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/activities/reminder")
+@RequestMapping("/activities")
 public class ActivitiesController {
 
     private final ActivityRepository activityRepository;
@@ -51,14 +51,14 @@ public class ActivitiesController {
             throw new RuntimeException("Error getting all activities");
         }
     }
-    @PostMapping("/activity/")
-    public ResponseEntity<String> addActivity(@RequestBody Activity activity){
+    @PostMapping("/activity")
+    public ResponseEntity<Activity> addActivity(@RequestBody Activity activity){
         try {
             this.activityRepository.save(activity);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding activity");
         }
-        return ResponseEntity.ok().body("added "+activity);
+        return ResponseEntity.ok().body(activity);
     }
     @DeleteMapping("/activity/{id}")
     public ResponseEntity<String> deleteActivity(@PathVariable long id){
@@ -163,7 +163,7 @@ public class ActivitiesController {
             throw new RuntimeException("Error getting all save by user");
         }
     }*/
-    @GetMapping("/save/all")
+    @GetMapping("/save")
     public List<ActivitySave> getAllSave(){
         try {
             return this.activitySaveRepository.findAll();
