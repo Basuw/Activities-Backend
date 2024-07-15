@@ -1,7 +1,10 @@
 package activities.com.backend.activities.controllers;
 
 import activities.com.backend.activities.models.User;
+import activities.com.backend.activities.services.ActivityDoneService;
 import activities.com.backend.activities.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,7 @@ import static activities.com.backend.activities.utilities.*;
 public class UserController {
 
     private final UserService userService;
+    private final Logger LOGGER = LoggerFactory.getLogger(ActivityDoneService.class);
 
     @Autowired
     private UserController(UserService userService){
@@ -42,6 +46,7 @@ public class UserController {
     @PostMapping("/user")
     public ResponseEntity<User> addUser(@RequestBody User user){
         try {
+            LOGGER.info("Saving user: {}", user);
             return ResponseEntity.ok().body(userService.addUser(user));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding user");
@@ -51,6 +56,7 @@ public class UserController {
     @DeleteMapping("/user/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable long id){
         try {
+            LOGGER.info("Deleting user: with id: {}", id);
             userService.deleteUser(id);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding user");

@@ -1,7 +1,10 @@
 package activities.com.backend.activities.controllers;
 
 import activities.com.backend.activities.models.ActivitySave;
+import activities.com.backend.activities.services.ActivityDoneService;
 import activities.com.backend.activities.services.ActivitySaveService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,7 @@ import static activities.com.backend.activities.utilities.*;
 public class ActivitySaveController {
 
     private final ActivitySaveService activitySaveService;
+    private final Logger LOGGER = LoggerFactory.getLogger(ActivityDoneService.class);
 
     @Autowired
     public ActivitySaveController(ActivitySaveService activitySaveService) {
@@ -42,6 +46,7 @@ public class ActivitySaveController {
     @PostMapping("/save")
     public ResponseEntity<String> addSave(@RequestBody ActivitySave activitySave){
         try {
+            LOGGER.info("Saving activity save: {}", activitySave);
             activitySaveService.addSave(activitySave);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding user");
@@ -51,6 +56,7 @@ public class ActivitySaveController {
     @DeleteMapping("/save/{id}")
     public ResponseEntity<String> deleteSave(@PathVariable long id){
         try {
+
             activitySaveService.deleteSave(id);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding save");

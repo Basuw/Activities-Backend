@@ -2,6 +2,8 @@ package activities.com.backend.activities.controllers;
 
 import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.services.ActivityDoneService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +16,9 @@ import static activities.com.backend.activities.utilities.*;
 @RequestMapping(ACTIVITY)
 public class ActivityDoneController {
 
-
     private final ActivityDoneService activityDoneService;
+    private final Logger LOGGER = LoggerFactory.getLogger(ActivityDoneService.class);
+
 
     @Autowired
     public ActivityDoneController(ActivityDoneService activityDoneService){
@@ -43,6 +46,7 @@ public class ActivityDoneController {
     @PostMapping("/achieve")
     public ResponseEntity<ActivityDone> addAchieve(@RequestBody ActivityDone activityDone){
         try {
+            LOGGER.info("Saving activity done: {}", activityDone);
             return  ResponseEntity.ok().body(activityDoneService.addAchieve(activityDone));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding user");
@@ -52,6 +56,7 @@ public class ActivityDoneController {
     @DeleteMapping("/achieve/{id}")
     public ResponseEntity<String> deleteAchieve(@PathVariable long id){
         try {
+            LOGGER.info("Deleting activity done: with id: {}", id);
             activityDoneService.deleteAchieve(id);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding achieve");
