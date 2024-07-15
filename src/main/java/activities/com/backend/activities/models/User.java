@@ -1,14 +1,13 @@
 package activities.com.backend.activities.models;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.List;
-
+import java.sql.Date;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Entity
@@ -25,7 +24,9 @@ public class User {
     private String password;
     private String mail;
     private String role;
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date createdOn;
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date birthDate;
     private float weight;
     private float height;

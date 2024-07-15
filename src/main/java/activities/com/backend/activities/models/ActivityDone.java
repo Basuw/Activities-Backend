@@ -1,5 +1,6 @@
 package activities.com.backend.activities.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,8 @@ public class ActivityDone {
     @GeneratedValue(strategy = SEQUENCE,generator = "achieveSequence")
     private int id;
     private float achievement;
+
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private Date doneOn;
 
     @ManyToOne
