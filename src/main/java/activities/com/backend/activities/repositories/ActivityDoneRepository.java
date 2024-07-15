@@ -3,6 +3,7 @@ package activities.com.backend.activities.repositories;
 import activities.com.backend.activities.models.ActivityDone;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ActivityDoneRepository extends CrudRepository<ActivityDone, Long> {
@@ -13,5 +14,11 @@ public interface ActivityDoneRepository extends CrudRepository<ActivityDone, Lon
     List<ActivityDone> findAll();
 
     List<ActivityDone> getAllByActivitySave_UserId(long userId);
+
+/*
+    List<ActivityDone> getAllByDoneOnIsAfterAndDoneOnBeforeAndActivitySave_Activity(Date start, Date end);
+*/
+    List<ActivityDone> getAllByActivitySave_ActivityId(long activityId);
+
 
 }

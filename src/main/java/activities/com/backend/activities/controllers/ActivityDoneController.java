@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static activities.com.backend.activities.utilities.*;
 
@@ -77,5 +79,25 @@ public class ActivityDoneController {
             throw new RuntimeException("Error adding achieve");
         }
         return ResponseEntity.ok().body("deleted "+id);
+    }
+
+/*    @GetMapping("/achieve/week_progress/{activity_id}")
+    @ApiOperation("Progress of activity done in a week")
+    public ResponseEntity<Map<Activity,Float>> getWeekActivityProgress(@PathVariable long activity_id, @RequestParam Date beginning){
+        try {
+            return ResponseEntity.ok().body(activityDoneService.getWeekActivityProgress(activity_id, beginning));
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error adding achieve");
+        }
+    }*/
+
+    @GetMapping("/achieve/activity_id/{activity_id}")
+    @ApiOperation("Progress of activity done in a week")
+    public ResponseEntity<List<ActivityDone>> getWeekActivity(@PathVariable long activity_id/*, @RequestParam Date beginning_date*/){
+        try {
+            return ResponseEntity.ok().body(activityDoneService.getWeekActivity(activity_id/*, beginning_date*/));
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error adding achieve");
+        }
     }
 }
