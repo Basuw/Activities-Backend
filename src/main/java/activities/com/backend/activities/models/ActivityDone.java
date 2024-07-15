@@ -19,8 +19,6 @@ public class ActivityDone {
     @Id
     @GeneratedValue(strategy = SEQUENCE,generator = "achieveSequence")
     private int id;
-    private int activitySaveId;
     private float achievement;
     private Date doneOn;
-
 }

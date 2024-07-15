@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Entity
@@ -21,5 +23,9 @@ public class Activity {
     private String description;
     private String unity;
     private String icon;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "activity_id", referencedColumnName = "id")
+    private List<ActivitySave> activitySaves;
 
 }

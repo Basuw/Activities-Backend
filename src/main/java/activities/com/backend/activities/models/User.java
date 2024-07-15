@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -18,9 +19,9 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 public class User {
     @Id
     @GeneratedValue(strategy = SEQUENCE,generator = "userSequence")
-    @SequenceGenerator(name = "userSequence", sequenceName = "public.activity_save_sequence")
+    @SequenceGenerator(name = "userSequence", sequenceName = "public.user_sequence", allocationSize = 1)
     private int id;
-    private String name;
+    private String username;
     private String password;
     private String mail;
     private String role;
@@ -30,18 +31,7 @@ public class User {
     private float height;
     private float fat;
     private float targetWeight;
-
-    public User(int id, String name, String password, String mail, String role, Date createdOn, Date birthDate, float weight, float height, float fat, float targetWeight){
-        this.id = id;
-        this.name = name;
-        this.password = password;
-        this.mail = mail;
-        this.role = role;
-        this.createdOn = createdOn;
-        this.birthDate = birthDate;
-        this.weight = weight;
-        this.height = height;
-        this.fat = fat;
-        this.targetWeight = targetWeight;
-    }
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private List<ActivitySave> activitySaves;
 }

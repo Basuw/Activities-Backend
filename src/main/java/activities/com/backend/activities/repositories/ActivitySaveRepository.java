@@ -10,5 +10,5 @@ public interface ActivitySaveRepository extends CrudRepository<ActivitySave, Lon
     ActivitySave findById(long id);
     List<ActivitySave> findAll();
 
-
+    //List<ActivitySave> findByUserId(long userId);
 }

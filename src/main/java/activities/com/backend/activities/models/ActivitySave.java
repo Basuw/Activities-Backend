@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Entity
@@ -19,8 +21,11 @@ public class ActivitySave {
     @Id
     @GeneratedValue(strategy = SEQUENCE,generator = "savedSequence")
     private int id;
-    private int activityId;
-    private int userId;
+    //private int activityId;
     private float frequency;
     private float objective;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "activity_save_id", referencedColumnName = "id")
+    private List<ActivityDone> activityDones;
 }
