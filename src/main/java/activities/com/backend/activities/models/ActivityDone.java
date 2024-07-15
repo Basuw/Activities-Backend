@@ -21,4 +21,8 @@ public class ActivityDone {
     private int id;
     private float achievement;
     private Date doneOn;
+
+    @ManyToOne
+    @JoinColumn(name = "activity_save_id", referencedColumnName = "id")
+    private ActivitySave activitySave;
 }

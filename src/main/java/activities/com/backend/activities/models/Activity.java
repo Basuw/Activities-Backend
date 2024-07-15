@@ -23,9 +23,4 @@ public class Activity {
     private String description;
     private String unity;
     private String icon;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "activity_id", referencedColumnName = "id")
-    private List<ActivitySave> activitySaves;
-
 }

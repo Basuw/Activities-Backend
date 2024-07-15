@@ -1,8 +1,7 @@
 package activities.com.backend.activities.controllers;
 
 import activities.com.backend.activities.models.ActivitySave;
-import activities.com.backend.activities.repositories.ActivitySaveRepository;
-import activities.com.backend.activities.repositories.UserRepository;
+import activities.com.backend.activities.services.ActivitySaveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,20 +14,18 @@ import static activities.com.backend.activities.utilities.*;
 @RequestMapping(ACTIVITY)
 public class ActivitySaveController {
 
-    private final ActivitySaveRepository activitySaveRepository;
-    private final UserRepository userRepository;
+    private final ActivitySaveService activitySaveService;
 
     @Autowired
-    public ActivitySaveController(ActivitySaveRepository activitySaveRepository, UserRepository userRepository) {
-        this.activitySaveRepository = activitySaveRepository;
-        this.userRepository = userRepository;
+    public ActivitySaveController(ActivitySaveService activitySaveService) {
+        this.activitySaveService = activitySaveService;
     }
 
 
     @GetMapping("/save")
     public List<ActivitySave> getAllSave(){
         try {
-            return this.activitySaveRepository.findAll();
+            return activitySaveService.getAllSave();
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting all save by user");
         }
@@ -37,7 +34,7 @@ public class ActivitySaveController {
     @GetMapping("/save/{id}")
     public ResponseEntity<ActivitySave> getSaveById(@PathVariable long id){
         try {
-            return ResponseEntity.ok().body(this.activitySaveRepository.findById(id));
+            return ResponseEntity.ok().body(activitySaveService.getSaveById(id));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting save with id : "+id);
         }
@@ -45,7 +42,7 @@ public class ActivitySaveController {
     @PostMapping("/save")
     public ResponseEntity<String> addSave(@RequestBody ActivitySave activitySave){
         try {
-            this.activitySaveRepository.save(activitySave);
+            activitySaveService.addSave(activitySave);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding user");
         }
@@ -54,7 +51,7 @@ public class ActivitySaveController {
     @DeleteMapping("/save/{id}")
     public ResponseEntity<String> deleteSave(@PathVariable long id){
         try {
-            this.activitySaveRepository.deleteById(id);
+            activitySaveService.deleteSave(id);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding save");
         }
@@ -62,13 +59,13 @@ public class ActivitySaveController {
     }
 
 
-/*    @GetMapping("/save/user_id/{userId}")
+    @GetMapping("/save/user_id/{userId}")
     @ResponseBody
     public ResponseEntity<List<ActivitySave>> getUserSaves(@PathVariable int userId){
         try {
-            return ResponseEntity.ok().body(this.userRepository.SaveByUserId(userId));
+            return ResponseEntity.ok().body(activitySaveService.getUserSaves(userId));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting user saves");
         }
-    }*/
+    }
 }

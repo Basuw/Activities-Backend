@@ -25,7 +25,12 @@ public class ActivitySave {
     private float frequency;
     private float objective;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "activity_save_id", referencedColumnName = "id")
-    private List<ActivityDone> activityDones;
+    @ManyToOne
+    @JoinColumn(name = "activity_id", referencedColumnName = "id")
+    private Activity activity;
+
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 }

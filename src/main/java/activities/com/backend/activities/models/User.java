@@ -31,7 +31,4 @@ public class User {
     private float height;
     private float fat;
     private float targetWeight;
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private List<ActivitySave> activitySaves;
 }
