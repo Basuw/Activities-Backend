@@ -1,12 +1,11 @@
 package activities.com.backend.activities.controllers;
 
 import activities.com.backend.activities.models.ActivityDone;
-import activities.com.backend.activities.repositories.ActivityDoneRepository;
+import activities.com.backend.activities.services.ActivityDoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 import static activities.com.backend.activities.utilities.*;
@@ -15,17 +14,18 @@ import static activities.com.backend.activities.utilities.*;
 @RequestMapping(ACTIVITY)
 public class ActivityDoneController {
 
-    private final ActivityDoneRepository activityDoneRepository;
+
+    private final ActivityDoneService activityDoneService;
 
     @Autowired
-    public ActivityDoneController(ActivityDoneRepository activityDoneRepository){
-        this.activityDoneRepository = activityDoneRepository;
+    public ActivityDoneController(ActivityDoneService activityDoneService){
+        this.activityDoneService = activityDoneService;
     }
 
     @GetMapping("/achieve")
-    public List<ActivityDone> getAllAchieveByUser(){
+    public ResponseEntity<List<ActivityDone>> getAllAchieveByUser(){
         try {
-            return this.activityDoneRepository.findAll();
+            return ResponseEntity.ok().body(activityDoneService.getAllAchieveByUser());
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting all achieve by user");
         }
@@ -34,25 +34,25 @@ public class ActivityDoneController {
     @GetMapping("/achieve/{id}")
     public ResponseEntity<ActivityDone> getAchieveById(@PathVariable long id){
         try {
-            return ResponseEntity.ok().body(this.activityDoneRepository.findById(id));
+            return ResponseEntity.ok().body(activityDoneService.getAchieveById(id));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting user with id : "+id);
         }
     }
+
     @PostMapping("/achieve")
-    public ResponseEntity<String> addAchieve(@RequestBody ActivityDone activityDone){
+    public ResponseEntity<ActivityDone> addAchieve(@RequestBody ActivityDone activityDone){
         try {
-            activityDone.setDoneOn(new Date());
-            this.activityDoneRepository.save(activityDone);
+            return  ResponseEntity.ok().body(activityDoneService.addAchieve(activityDone));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding user");
         }
-        return ResponseEntity.ok().body("added "+ activityDone);
     }
+
     @DeleteMapping("/achieve/{id}")
     public ResponseEntity<String> deleteAchieve(@PathVariable long id){
         try {
-            this.activityDoneRepository.deleteById(id);
+            activityDoneService.deleteAchieve(id);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding achieve");
         }
