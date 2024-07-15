@@ -2,6 +2,7 @@ package activities.com.backend.activities.controllers;
 
 import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.services.ActivityDoneService;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +27,17 @@ public class ActivityDoneController {
     }
 
     @GetMapping("/achieve")
-    public ResponseEntity<List<ActivityDone>> getAllAchieveByUser(){
+    @ApiOperation("Get all activities done")
+    public ResponseEntity<List<ActivityDone>> getAllAchieve(){
         try {
-            return ResponseEntity.ok().body(activityDoneService.getAllAchieveByUser());
+            return ResponseEntity.ok().body(activityDoneService.getAllAchieve());
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting all achieve by user");
         }
     }
 
     @GetMapping("/achieve/{id}")
+    @ApiOperation("Get activity done by id")
     public ResponseEntity<ActivityDone> getAchieveById(@PathVariable long id){
         try {
             return ResponseEntity.ok().body(activityDoneService.getAchieveById(id));
@@ -43,17 +46,29 @@ public class ActivityDoneController {
         }
     }
 
+    @GetMapping("/achieve/user_id/{user_id}")
+    @ApiOperation("Get all activities done by user")
+    public ResponseEntity<List<ActivityDone>> getAchieveByUserId(@PathVariable long user_id){
+        try {
+            return ResponseEntity.ok().body(activityDoneService.getAchieveByUserId(user_id));
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error getting user with id : "+user_id);
+        }
+    }
+
     @PostMapping("/achieve")
+    @ApiOperation("Add activity done")
     public ResponseEntity<ActivityDone> addAchieve(@RequestBody ActivityDone activityDone){
         try {
             LOGGER.info("Saving activity done: {}", activityDone);
             return  ResponseEntity.ok().body(activityDoneService.addAchieve(activityDone));
         }catch (RuntimeException exception){
-            throw new RuntimeException("Error adding user");
+            throw new RuntimeException("Error adding activity done");
         }
     }
 
     @DeleteMapping("/achieve/{id}")
+    @ApiOperation("Delete activity done")
     public ResponseEntity<String> deleteAchieve(@PathVariable long id){
         try {
             LOGGER.info("Deleting activity done: with id: {}", id);

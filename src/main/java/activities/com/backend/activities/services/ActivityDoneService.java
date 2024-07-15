@@ -19,7 +19,7 @@ public class ActivityDoneService {
     }
 
 
-    public List<ActivityDone> getAllAchieveByUser(){
+    public List<ActivityDone> getAllAchieve(){
         try {
             return this.activityDoneRepository.findAll();
         }catch (RuntimeException exception){
@@ -49,6 +49,14 @@ public class ActivityDoneService {
             this.activityDoneRepository.deleteById(id);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding achieve");
+        }
+    }
+
+    public List<ActivityDone> getAchieveByUserId(long userId) {
+        try {
+            return this.activityDoneRepository.getAllByActivitySave_UserId(userId);
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error getting achieved by userId");
         }
     }
 }
