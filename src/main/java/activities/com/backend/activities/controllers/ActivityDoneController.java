@@ -128,18 +128,17 @@ public class ActivityDoneController {
         }
     }
 
-/*    @GetMapping("/achieve/progress/detailed")
+    @GetMapping("/achieve/progress/detailed")
     @ApiOperation("Activity done by user id and activity id date later than given date")
-    public ResponseEntity<Double> getProgressByActUsrIdBeginEndDateDetailed(@RequestParam long activity_id,
-                                                                    @RequestParam int user_id,
+    public ResponseEntity<List<ActivityDoneDTO>> getProgressByActSaveIdBeginEndDateDetailed(@RequestParam long activity_save_id,
                                                                     @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date begin_date,
                                                                     @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date end_date){
         try {
-            return ResponseEntity.ok().body(activityDoneService.progressByActUsrIdBeginEndDateDetailed(activity_id,user_id,begin_date,end_date));
+            return ResponseEntity.ok().body(activityDoneService.progressByActSaveIdBeginEndDateDetailed(activity_save_id,begin_date,end_date));
         }catch (RuntimeException exception){
             throw new RuntimeException(exception.getMessage());
         }
-    }*/
+    }
 
     @GetMapping("/achieve/progress/user")
     @ApiOperation("Activity done by user id and activity id date later than given date")
@@ -150,21 +149,6 @@ public class ActivityDoneController {
             return ResponseEntity.ok().body(activityDoneService.progressByUsrIdBeginEndDate(user_id,begin_date,end_date));
         }catch (RuntimeException exception){
             throw new RuntimeException(exception.getMessage());
-        }
-    }
-
-
-
-
-    @GetMapping("/dto")
-    @ApiOperation("DTO test")
-    public ResponseEntity<ActivityDoneDTO> testDTO(){
-        try {
-            ActivityDone act = activityDoneService.getAchieveById(2);
-            ActivityDoneDTO actDTO = ActivityDoneMapper.INSTANCE.toDto(act);
-            return ResponseEntity.ok().body(actDTO);
-        }catch (RuntimeException exception){
-            throw new RuntimeException("Error adding achieve");
         }
     }
 }

@@ -1,16 +1,14 @@
 package activities.com.backend.activities.services;
 
 import activities.com.backend.activities.dto.ActivityDoneDTO;
+import activities.com.backend.activities.mapper.ActivityDoneMapper;
 import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.models.ActivitySave;
 import activities.com.backend.activities.repositories.ActivityDoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ActivityDoneService {
@@ -118,6 +116,19 @@ public class ActivityDoneService {
             return progressMap;
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting progress for all activities");
+        }
+    }
+
+    public List<ActivityDoneDTO> progressByActSaveIdBeginEndDateDetailed(long activitySaveId, Date beginDate, Date endDate) {
+        try {
+            List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySaveIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(activitySaveId,beginDate,endDate);
+            List<ActivityDoneDTO> activityDoneDTOList = new ArrayList<>();
+            for (ActivityDone activityDone : activityDoneList){
+                activityDoneDTOList.add(ActivityDoneMapper.INSTANCE.toDto(activityDone));
+            }
+            return activityDoneDTOList;
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error getting progress");
         }
     }
 }
