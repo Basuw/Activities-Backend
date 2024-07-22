@@ -31,6 +31,8 @@ CREATE TABLE activities.activity_save (
     user_id INTEGER,
     frequency INTEGER,
     objective INTEGER,
+    mark INTEGER,
+    notes VARCHAR,
     FOREIGN KEY (activity_id) REFERENCES activities.activity (id),
     FOREIGN KEY (user_id) REFERENCES public.user (id)
 );
@@ -142,9 +144,9 @@ INSERT INTO activities.activity VALUES (nextval('activities.activity_sequence'),
 INSERT INTO activities.activity VALUES (nextval('activities.activity_sequence'), 'activity2', 'icon2', 'unity2', 'description2');
 INSERT INTO activities.activity VALUES (nextval('activities.activity_sequence'), 'activity3', 'icon3', 'unity3', 'description3');
 
-INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 1, 1, 3, 5);
-INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 2, 1, 2, 3);
-INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 3, 1, 1, 1);
+INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 1, 1, 3, 5,3,"Felt bad");
+INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 2, 1, 2, 3,5,"Nice feelings");
+INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 3, 1, 1, 1, 1,"worst experience of my life");
 
 INSERT INTO activities.activity_done VALUES (nextval('activities.activity_done_sequence'), '2021-01-01', 5,1);
 INSERT INTO activities.activity_done VALUES (nextval('activities.activity_done_sequence'), '2021-01-02', 3,2);

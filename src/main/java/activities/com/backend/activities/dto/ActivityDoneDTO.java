@@ -12,4 +12,6 @@ public class ActivityDoneDTO {
     private float achievement;
     private Date doneOn;
     private int activitySaveId;
+    private int mark;
+    private String notes;
 }

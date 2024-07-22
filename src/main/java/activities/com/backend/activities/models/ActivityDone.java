@@ -28,4 +28,7 @@ public class ActivityDone {
     @ManyToOne
     @JoinColumn(name = "activity_save_id", referencedColumnName = "id")
     private ActivitySave activitySave;
+
+    private int mark;
+    private String notes;
 }
