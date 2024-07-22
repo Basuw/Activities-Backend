@@ -1,12 +1,15 @@
 package activities.com.backend.activities.services;
 
 import activities.com.backend.activities.models.ActivityDone;
+import activities.com.backend.activities.models.ActivitySave;
 import activities.com.backend.activities.repositories.ActivityDoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ActivityDoneService {
@@ -96,7 +99,24 @@ public class ActivityDoneService {
 
             return (double) ((progress/(objective*frequency))*100);
         }catch (RuntimeException exception){
-            throw new RuntimeException("Error getting week activity");
+            throw new RuntimeException("Error getting progress");
+        }
+    }
+
+    public Map<ActivitySave,Double> progressByUsrIdBeginEndDate(long userId, Date begindate, Date enddate) {
+        try {
+            List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySave_UserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(userId,begindate,enddate);
+            Map<ActivitySave,Double> progressMap = new HashMap<>();
+            for (ActivityDone activityDone : activityDoneList){
+                float progress = progressMap.containsKey(activityDone.getActivitySave()) ? progressMap.get(activityDone.getActivitySave()).floatValue() : 0;
+                float objective = activityDone.getActivitySave().getObjective();
+                float frequency = activityDone.getActivitySave().getFrequency();
+                progress += activityDone.getAchievement();
+                progressMap.put(activityDone.getActivitySave(),(double) ((progress/(objective*frequency))*100));
+            }
+            return progressMap;
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error getting progress for all activities");
         }
     }
 }

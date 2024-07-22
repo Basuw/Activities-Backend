@@ -3,6 +3,7 @@ package activities.com.backend.activities.controllers;
 import activities.com.backend.activities.dto.ActivityDoneDTO;
 import activities.com.backend.activities.mapper.ActivityDoneMapper;
 import activities.com.backend.activities.models.ActivityDone;
+import activities.com.backend.activities.models.ActivitySave;
 import activities.com.backend.activities.services.ActivityDoneService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static activities.com.backend.activities.utilities.*;
 
@@ -88,7 +90,7 @@ public class ActivityDoneController {
         try {
             return ResponseEntity.ok().body(activityDoneService.activityDoneByActivityIdAndUserId(activity_id,user_id));
         }catch (RuntimeException exception){
-            throw new RuntimeException("Error adding achieve");
+            throw new RuntimeException(exception.getMessage());
         }
     }
 
@@ -98,7 +100,7 @@ public class ActivityDoneController {
         try {
             return ResponseEntity.ok().body(activityDoneService.activityDoneByActivityIdAndUserIdAndDoneOn(activity_id,user_id,date));
         }catch (RuntimeException exception){
-            throw new RuntimeException("Error adding achieve");
+            throw new RuntimeException(exception.getMessage());
         }
     }
 
@@ -111,11 +113,11 @@ public class ActivityDoneController {
         try {
             return ResponseEntity.ok().body(activityDoneService.activityDoneByActivityIdAndUserIdAndDoneOnBetween(activity_id,user_id,begin_date,end_date));
         }catch (RuntimeException exception){
-            throw new RuntimeException("Error adding achieve");
+            throw new RuntimeException(exception.getMessage());
         }
     }
 
-    @GetMapping("/achieve/progress")
+    @GetMapping("/achieve/progress-by-act")
     @ApiOperation("Activity done by user id and activity id date later than given date")
     public ResponseEntity<Double> getProgressByActUsrIdBeginEndDate(@RequestParam long activity_id,
                                                                     @RequestParam int user_id,
@@ -124,22 +126,24 @@ public class ActivityDoneController {
         try {
             return ResponseEntity.ok().body(activityDoneService.progressByActUsrIdBeginEndDate(activity_id,user_id,begin_date,end_date));
         }catch (RuntimeException exception){
-            throw new RuntimeException("Error adding achieve");
+            throw new RuntimeException(exception.getMessage());
+        }
+    }
+    @GetMapping("/achieve/progress-by-usr")
+    @ApiOperation("Activity done by user id and activity id date later than given date")
+    public ResponseEntity<Map<ActivitySave,Double>> getProgressByUsrIdBeginEndDate(@RequestParam int user_id,
+                                                                                   @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date begin_date,
+                                                                                   @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date end_date){
+        try {
+            return ResponseEntity.ok().body(activityDoneService.progressByUsrIdBeginEndDate(user_id,begin_date,end_date));
+        }catch (RuntimeException exception){
+            throw new RuntimeException(exception.getMessage());
         }
     }
 
 
 
 
-    /*    @GetMapping("/achieve/week_progress/{activity_id}")
-        @ApiOperation("Progress of activity done in a week")
-        public ResponseEntity<Map<Activity,Float>> getWeekActivityProgress(@PathVariable long activity_id, @RequestParam Date beginning){
-            try {
-                return ResponseEntity.ok().body(activityDoneService.getWeekActivityProgress(activity_id, beginning));
-            }catch (RuntimeException exception){
-                throw new RuntimeException("Error adding achieve");
-            }
-        }*/
     @GetMapping("/dto")
     @ApiOperation("DTO test")
     public ResponseEntity<ActivityDoneDTO> testDTO(){
