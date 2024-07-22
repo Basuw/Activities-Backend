@@ -76,11 +76,27 @@ public class ActivityDoneService {
         }
     }
 
-/*    public Map<Activity, Float> getWeekActivityProgress(long activityId, Date beginning) {
+    public List<ActivityDone> activityDoneByActivityIdAndUserIdAndDoneOnBetween(long activityId, long userId, Date begindate, Date enddate) {
         try {
-            return  activityDoneRepository.getAllByDoneOnIsAfterAndDoneOnBeforeAndActivitySave_Activity(activityId, beginning);
+            return  activityDoneRepository.getAllByActivitySave_ActivityIdAndActivitySave_UserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(activityId, userId,begindate,enddate);
         }catch (RuntimeException exception){
-            throw new RuntimeException("Error getting week activity progress");
+            throw new RuntimeException("Error getting week activity");
         }
-    }*/
+    }
+
+    public Double progressByActUsrIdBeginEndDate(long activityId, long userId, Date begindate, Date enddate) {
+        try {
+            List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySave_ActivityIdAndActivitySave_UserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(activityId, userId,begindate,enddate);
+            float progress = 0;
+            float objective = activityDoneList.getFirst().getActivitySave().getObjective();
+            float frequency = activityDoneList.getFirst().getActivitySave().getFrequency();
+            for (ActivityDone activityDone : activityDoneList){
+                progress += activityDone.getAchievement();
+            }
+
+            return (double) ((progress/(objective*frequency))*100);
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error getting week activity");
+        }
+    }
 }

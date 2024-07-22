@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -81,19 +82,9 @@ public class ActivityDoneController {
         return ResponseEntity.ok().body("deleted "+id);
     }
 
-/*    @GetMapping("/achieve/week_progress/{activity_id}")
-    @ApiOperation("Progress of activity done in a week")
-    public ResponseEntity<Map<Activity,Float>> getWeekActivityProgress(@PathVariable long activity_id, @RequestParam Date beginning){
-        try {
-            return ResponseEntity.ok().body(activityDoneService.getWeekActivityProgress(activity_id, beginning));
-        }catch (RuntimeException exception){
-            throw new RuntimeException("Error adding achieve");
-        }
-    }*/
-
-    @GetMapping("/achieve/activity_id/{activity_id}")
+    @GetMapping("/achieve/activity_id")
     @ApiOperation("Activity done by user id and activity id")
-    public ResponseEntity<List<ActivityDone>> getActivityDoneByActivityAndUserId(@PathVariable long activity_id, @RequestParam int user_id){
+    public ResponseEntity<List<ActivityDone>> getActivityDoneByActivityAndUserId(@RequestParam long activity_id, @RequestParam int user_id){
         try {
             return ResponseEntity.ok().body(activityDoneService.activityDoneByActivityIdAndUserId(activity_id,user_id));
         }catch (RuntimeException exception){
@@ -101,11 +92,37 @@ public class ActivityDoneController {
         }
     }
 
-    @GetMapping("/achieve/date/activity_id/{activity_id}")
+    @GetMapping("/achieve/after_date")
     @ApiOperation("Activity done by user id and activity id date later than given date")
-    public ResponseEntity<List<ActivityDone>> getActivityDoneByActivityIdAndUserIdAndDoneOn(@PathVariable long activity_id, @RequestParam int user_id, @RequestParam Date date){
+    public ResponseEntity<List<ActivityDone>> getActivityDoneByActivityIdAndUserIdAndDoneOnAfter(@RequestParam long activity_id, @RequestParam int user_id, @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date date){
         try {
             return ResponseEntity.ok().body(activityDoneService.activityDoneByActivityIdAndUserIdAndDoneOn(activity_id,user_id,date));
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error adding achieve");
+        }
+    }
+
+    @GetMapping("/achieve/between_date")
+    @ApiOperation("Activity done by user id and activity id date between given dates")
+    public ResponseEntity<List<ActivityDone>> getActivityDoneByActivityIdAndUserIdAndDoneOnBetween(@RequestParam long activity_id,
+                                                                                                   @RequestParam int user_id,
+                                                                                                   @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date begin_date,
+                                                                                                   @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date end_date){
+        try {
+            return ResponseEntity.ok().body(activityDoneService.activityDoneByActivityIdAndUserIdAndDoneOnBetween(activity_id,user_id,begin_date,end_date));
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error adding achieve");
+        }
+    }
+
+    @GetMapping("/achieve/progress")
+    @ApiOperation("Activity done by user id and activity id date later than given date")
+    public ResponseEntity<Double> getProgressByActUsrIdBeginEndDate(@RequestParam long activity_id,
+                                                                    @RequestParam int user_id,
+                                                                    @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date begin_date,
+                                                                    @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date end_date){
+        try {
+            return ResponseEntity.ok().body(activityDoneService.progressByActUsrIdBeginEndDate(activity_id,user_id,begin_date,end_date));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding achieve");
         }
@@ -114,7 +131,15 @@ public class ActivityDoneController {
 
 
 
-
+    /*    @GetMapping("/achieve/week_progress/{activity_id}")
+        @ApiOperation("Progress of activity done in a week")
+        public ResponseEntity<Map<Activity,Float>> getWeekActivityProgress(@PathVariable long activity_id, @RequestParam Date beginning){
+            try {
+                return ResponseEntity.ok().body(activityDoneService.getWeekActivityProgress(activity_id, beginning));
+            }catch (RuntimeException exception){
+                throw new RuntimeException("Error adding achieve");
+            }
+        }*/
     @GetMapping("/dto")
     @ApiOperation("DTO test")
     public ResponseEntity<ActivityDoneDTO> testDTO(){
