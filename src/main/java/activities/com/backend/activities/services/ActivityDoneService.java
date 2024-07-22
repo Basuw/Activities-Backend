@@ -1,5 +1,6 @@
 package activities.com.backend.activities.services;
 
+import activities.com.backend.activities.dto.ActivityDoneDTO;
 import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.models.ActivitySave;
 import activities.com.backend.activities.repositories.ActivityDoneRepository;
@@ -63,33 +64,33 @@ public class ActivityDoneService {
         }
     }
 
-    public List<ActivityDone> activityDoneByActivityIdAndUserId(long activityId, long userId) {
+    public List<ActivityDone> activityDoneByActivityIdAndUserId(long activitySaveId) {
         try {
-            return  activityDoneRepository.getAllByActivitySave_ActivityIdAndActivitySave_UserId(activityId, userId);
+            return  activityDoneRepository.getAllByActivitySaveId(activitySaveId);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting week activity");
         }
     }
 
-    public List<ActivityDone> activityDoneByActivityIdAndUserIdAndDoneOn(long activityId, long userId, Date date) {
+    public List<ActivityDone> activityDoneByActivityIdAndUserIdAndDoneOn(long activitySaveId, Date date) {
         try {
-            return  activityDoneRepository.getAllByActivitySave_ActivityIdAndActivitySave_UserIdAndDoneOnIsGreaterThanEqual(activityId, userId,date);
+            return  activityDoneRepository.getAllByActivitySaveIdAndDoneOnIsGreaterThanEqual(activitySaveId,date);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting week activity");
         }
     }
 
-    public List<ActivityDone> activityDoneByActivityIdAndUserIdAndDoneOnBetween(long activityId, long userId, Date begindate, Date enddate) {
+    public List<ActivityDone> activityDoneByActivityIdAndUserIdAndDoneOnBetween(long activitySaveId, Date begindate, Date enddate) {
         try {
-            return  activityDoneRepository.getAllByActivitySave_ActivityIdAndActivitySave_UserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(activityId, userId,begindate,enddate);
+            return  activityDoneRepository.getAllByActivitySaveIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(activitySaveId,begindate,enddate);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting week activity");
         }
     }
 
-    public Double progressByActUsrIdBeginEndDate(long activityId, long userId, Date begindate, Date enddate) {
+    public Double progressByActUsrIdBeginEndDate(long activityId, Date begindate, Date enddate) {
         try {
-            List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySave_ActivityIdAndActivitySave_UserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(activityId, userId,begindate,enddate);
+            List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySaveIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(activityId,begindate,enddate);
             float progress = 0;
             float objective = activityDoneList.getFirst().getActivitySave().getObjective();
             float frequency = activityDoneList.getFirst().getActivitySave().getFrequency();

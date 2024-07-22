@@ -86,9 +86,9 @@ public class ActivityDoneController {
 
     @GetMapping("/achieve/activity_id")
     @ApiOperation("Activity done by user id and activity id")
-    public ResponseEntity<List<ActivityDone>> getActivityDoneByActivityAndUserId(@RequestParam long activity_id, @RequestParam int user_id){
+    public ResponseEntity<List<ActivityDone>> getActivityDoneByActivityAndUserId(@RequestParam long activity_save_id){
         try {
-            return ResponseEntity.ok().body(activityDoneService.activityDoneByActivityIdAndUserId(activity_id,user_id));
+            return ResponseEntity.ok().body(activityDoneService.activityDoneByActivityIdAndUserId(activity_save_id));
         }catch (RuntimeException exception){
             throw new RuntimeException(exception.getMessage());
         }
@@ -96,9 +96,9 @@ public class ActivityDoneController {
 
     @GetMapping("/achieve/after_date")
     @ApiOperation("Activity done by user id and activity id date later than given date")
-    public ResponseEntity<List<ActivityDone>> getActivityDoneByActivityIdAndUserIdAndDoneOnAfter(@RequestParam long activity_id, @RequestParam int user_id, @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date date){
+    public ResponseEntity<List<ActivityDone>> getActivityDoneByActivityIdAndUserIdAndDoneOnAfter(@RequestParam long activity_save_id, @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date date){
         try {
-            return ResponseEntity.ok().body(activityDoneService.activityDoneByActivityIdAndUserIdAndDoneOn(activity_id,user_id,date));
+            return ResponseEntity.ok().body(activityDoneService.activityDoneByActivityIdAndUserIdAndDoneOn(activity_save_id,date));
         }catch (RuntimeException exception){
             throw new RuntimeException(exception.getMessage());
         }
@@ -106,30 +106,42 @@ public class ActivityDoneController {
 
     @GetMapping("/achieve/between_date")
     @ApiOperation("Activity done by user id and activity id date between given dates")
-    public ResponseEntity<List<ActivityDone>> getActivityDoneByActivityIdAndUserIdAndDoneOnBetween(@RequestParam long activity_id,
-                                                                                                   @RequestParam int user_id,
+    public ResponseEntity<List<ActivityDone>> getActivityDoneByActivityIdAndUserIdAndDoneOnBetween(@RequestParam long activity_save_id,
                                                                                                    @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date begin_date,
                                                                                                    @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date end_date){
         try {
-            return ResponseEntity.ok().body(activityDoneService.activityDoneByActivityIdAndUserIdAndDoneOnBetween(activity_id,user_id,begin_date,end_date));
+            return ResponseEntity.ok().body(activityDoneService.activityDoneByActivityIdAndUserIdAndDoneOnBetween(activity_save_id,begin_date,end_date));
         }catch (RuntimeException exception){
             throw new RuntimeException(exception.getMessage());
         }
     }
 
-    @GetMapping("/achieve/progress-by-act")
+    @GetMapping("/achieve/progress/activity")
     @ApiOperation("Activity done by user id and activity id date later than given date")
-    public ResponseEntity<Double> getProgressByActUsrIdBeginEndDate(@RequestParam long activity_id,
-                                                                    @RequestParam int user_id,
+    public ResponseEntity<Double> getProgressByActUsrIdBeginEndDate(@RequestParam long activity_save_id,
                                                                     @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date begin_date,
                                                                     @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date end_date){
         try {
-            return ResponseEntity.ok().body(activityDoneService.progressByActUsrIdBeginEndDate(activity_id,user_id,begin_date,end_date));
+            return ResponseEntity.ok().body(activityDoneService.progressByActUsrIdBeginEndDate(activity_save_id,begin_date,end_date));
         }catch (RuntimeException exception){
             throw new RuntimeException(exception.getMessage());
         }
     }
-    @GetMapping("/achieve/progress-by-usr")
+
+/*    @GetMapping("/achieve/progress/detailed")
+    @ApiOperation("Activity done by user id and activity id date later than given date")
+    public ResponseEntity<Double> getProgressByActUsrIdBeginEndDateDetailed(@RequestParam long activity_id,
+                                                                    @RequestParam int user_id,
+                                                                    @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date begin_date,
+                                                                    @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date end_date){
+        try {
+            return ResponseEntity.ok().body(activityDoneService.progressByActUsrIdBeginEndDateDetailed(activity_id,user_id,begin_date,end_date));
+        }catch (RuntimeException exception){
+            throw new RuntimeException(exception.getMessage());
+        }
+    }*/
+
+    @GetMapping("/achieve/progress/user")
     @ApiOperation("Activity done by user id and activity id date later than given date")
     public ResponseEntity<Map<ActivitySave,Double>> getProgressByUsrIdBeginEndDate(@RequestParam int user_id,
                                                                                    @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date begin_date,
