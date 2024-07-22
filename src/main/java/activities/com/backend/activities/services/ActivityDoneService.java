@@ -1,6 +1,5 @@
 package activities.com.backend.activities.services;
 
-import activities.com.backend.activities.models.Activity;
 import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.repositories.ActivityDoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class ActivityDoneService {
@@ -62,19 +60,27 @@ public class ActivityDoneService {
         }
     }
 
+    public List<ActivityDone> activityDoneByActivityIdAndUserId(long activityId, long userId) {
+        try {
+            return  activityDoneRepository.getAllByActivitySave_ActivityIdAndActivitySave_UserId(activityId, userId);
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error getting week activity");
+        }
+    }
+
+    public List<ActivityDone> activityDoneByActivityIdAndUserIdAndDoneOn(long activityId, long userId, Date date) {
+        try {
+            return  activityDoneRepository.getAllByActivitySave_ActivityIdAndActivitySave_UserIdAndDoneOnIsGreaterThanEqual(activityId, userId,date);
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error getting week activity");
+        }
+    }
+
 /*    public Map<Activity, Float> getWeekActivityProgress(long activityId, Date beginning) {
         try {
-            return  activityDoneRepository.getAllByDoneOnIsAfterAndDoneOnBefore(activityId, beginning);
+            return  activityDoneRepository.getAllByDoneOnIsAfterAndDoneOnBeforeAndActivitySave_Activity(activityId, beginning);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting week activity progress");
         }
     }*/
-
-    public List<ActivityDone> getWeekActivity(long activityId/*, Date beginning*/) {
-        try {
-            return  activityDoneRepository.getAllByActivitySave_ActivityId(activityId);
-        }catch (RuntimeException exception){
-            throw new RuntimeException("Error getting week activity progress");
-        }
-    }
 }

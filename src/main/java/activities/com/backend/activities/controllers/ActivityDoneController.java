@@ -1,5 +1,7 @@
 package activities.com.backend.activities.controllers;
 
+import activities.com.backend.activities.dto.ActivityDoneDTO;
+import activities.com.backend.activities.mapper.ActivityDoneMapper;
 import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.services.ActivityDoneService;
 import io.swagger.annotations.ApiOperation;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static activities.com.backend.activities.utilities.*;
 
@@ -21,7 +22,6 @@ public class ActivityDoneController {
 
     private final ActivityDoneService activityDoneService;
     private final Logger LOGGER = LoggerFactory.getLogger(ActivityDoneService.class);
-
 
     @Autowired
     public ActivityDoneController(ActivityDoneService activityDoneService){
@@ -92,10 +92,36 @@ public class ActivityDoneController {
     }*/
 
     @GetMapping("/achieve/activity_id/{activity_id}")
-    @ApiOperation("Progress of activity done in a week")
-    public ResponseEntity<List<ActivityDone>> getWeekActivity(@PathVariable long activity_id/*, @RequestParam Date beginning_date*/){
+    @ApiOperation("Activity done by user id and activity id")
+    public ResponseEntity<List<ActivityDone>> getActivityDoneByActivityAndUserId(@PathVariable long activity_id, @RequestParam int user_id){
         try {
-            return ResponseEntity.ok().body(activityDoneService.getWeekActivity(activity_id/*, beginning_date*/));
+            return ResponseEntity.ok().body(activityDoneService.activityDoneByActivityIdAndUserId(activity_id,user_id));
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error adding achieve");
+        }
+    }
+
+    @GetMapping("/achieve/date/activity_id/{activity_id}")
+    @ApiOperation("Activity done by user id and activity id date later than given date")
+    public ResponseEntity<List<ActivityDone>> getActivityDoneByActivityIdAndUserIdAndDoneOn(@PathVariable long activity_id, @RequestParam int user_id, @RequestParam Date date){
+        try {
+            return ResponseEntity.ok().body(activityDoneService.activityDoneByActivityIdAndUserIdAndDoneOn(activity_id,user_id,date));
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error adding achieve");
+        }
+    }
+
+
+
+
+
+    @GetMapping("/dto")
+    @ApiOperation("DTO test")
+    public ResponseEntity<ActivityDoneDTO> testDTO(){
+        try {
+            ActivityDone act = activityDoneService.getAchieveById(2);
+            ActivityDoneDTO actDTO = ActivityDoneMapper.INSTANCE.toDto(act);
+            return ResponseEntity.ok().body(actDTO);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding achieve");
         }
