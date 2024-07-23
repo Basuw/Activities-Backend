@@ -49,4 +49,8 @@ public class ActivityService {
     public List<Activity> commonActivities() {
         return activityRepository.findAllByUser(null);
     }
+
+    public List<Activity> userActivities(long userId) {
+        return activityRepository.findAllByUserId(userId);
+    }
 }

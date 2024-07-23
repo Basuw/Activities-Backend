@@ -51,6 +51,14 @@ public class ActivitiesController {
         }
     }
 
+    @GetMapping("/activity/user/{id}")
+    public ResponseEntity<List<Activity>> getUserActivities(@PathVariable long id){
+        try {
+            return ResponseEntity.ok().body(activityService.userActivities(id));
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error getting all activities");
+        }
+    }
 
     @PostMapping("/activity")
     public ResponseEntity<Activity> addActivity(@RequestBody Activity activity){

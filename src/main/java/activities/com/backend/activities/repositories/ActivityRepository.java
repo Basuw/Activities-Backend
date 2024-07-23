@@ -9,8 +9,6 @@ import java.util.List;
 public interface ActivityRepository extends CrudRepository<Activity, Long> {
     List<Activity> findAll();
     Activity findById(long id);
-
     List<Activity> findAllByUser(User user);
-
-
+    List<Activity> findAllByUserId(long userId);
 }
