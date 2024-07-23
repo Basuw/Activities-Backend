@@ -1,5 +1,6 @@
 package activities.com.backend.activities.controllers;
 
+import activities.com.backend.activities.dto.ActivityDTO;
 import activities.com.backend.activities.models.Activity;
 import activities.com.backend.activities.services.ActivityDoneService;
 import activities.com.backend.activities.services.ActivityService;
@@ -51,10 +52,19 @@ public class ActivitiesController {
         }
     }
 
-    @GetMapping("/activity/user/{id}")
-    public ResponseEntity<List<Activity>> getUserActivities(@PathVariable long id){
+    @GetMapping("/activity/custom/user/{id}")
+    public ResponseEntity<List<ActivityDTO>> getCustomUserActivities(@PathVariable long id){
         try {
             return ResponseEntity.ok().body(activityService.userActivities(id));
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error getting all activities");
+        }
+    }
+
+    @GetMapping("/activity/all/user/{id}")
+    public ResponseEntity<List<ActivityDTO>> getAllUserActivitiesAndCommon(@PathVariable long id){
+        try {
+            return ResponseEntity.ok().body(activityService.userActivitiesAndCommon(id));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting all activities");
         }

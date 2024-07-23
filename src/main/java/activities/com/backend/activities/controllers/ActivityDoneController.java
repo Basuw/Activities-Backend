@@ -1,7 +1,6 @@
 package activities.com.backend.activities.controllers;
 
 import activities.com.backend.activities.dto.ActivityDoneDTO;
-import activities.com.backend.activities.mapper.ActivityDoneMapper;
 import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.models.ActivitySave;
 import activities.com.backend.activities.services.ActivityDoneService;

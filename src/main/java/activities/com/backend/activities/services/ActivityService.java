@@ -1,14 +1,21 @@
 package activities.com.backend.activities.services;
 
+import activities.com.backend.activities.dto.ActivityDTO;
+import activities.com.backend.activities.mapper.ActivityMapper;
 import activities.com.backend.activities.models.Activity;
 import activities.com.backend.activities.repositories.ActivityRepository;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ActivityService {
     private final ActivityRepository activityRepository;
+    private final Logger LOGGER = LoggerFactory.getLogger(ActivityService.class);
+
 
     public ActivityService(ActivityRepository activityRepository){
         this.activityRepository = activityRepository;
@@ -50,7 +57,26 @@ public class ActivityService {
         return activityRepository.findAllByUser(null);
     }
 
-    public List<Activity> userActivities(long userId) {
-        return activityRepository.findAllByUserId(userId);
+    public List<ActivityDTO> userActivities(long userId) {
+        return this.toDtos(activityRepository.findAllByUserId(userId));
+    }
+
+    public List<ActivityDTO> userActivitiesAndCommon(long id) {
+        List<Activity> activities = activityRepository.findAllByUserId(id);
+        activities.addAll(this.commonActivities());
+        return this.toDtos(activities);
+    }
+
+
+
+    public List<ActivityDTO> toDtos(List<Activity> activities) {
+        List<ActivityDTO> activityDTOS = new ArrayList<>();
+        for (Activity activity : activities) {
+            ActivityDTO activityDTO = ActivityMapper.INSTANCE.toDto(activity);
+            LOGGER.debug("Activity: {}", activityDTO);
+            activityDTOS.add(activityDTO);
+        }
+        LOGGER.info("User activities: {}", activityDTOS);
+        return activityDTOS;
     }
 }
