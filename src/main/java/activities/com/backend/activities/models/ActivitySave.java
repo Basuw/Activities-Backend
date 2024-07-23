@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Date;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -24,11 +24,11 @@ public class ActivitySave {
     //private int activityId;
     private float frequency;
     private float objective;
+    private Date time;
 
     @ManyToOne
     @JoinColumn(name = "activity_id", referencedColumnName = "id")
     private Activity activity;
-
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

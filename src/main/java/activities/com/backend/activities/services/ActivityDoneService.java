@@ -4,6 +4,7 @@ import activities.com.backend.activities.dto.ActivityDoneDTO;
 import activities.com.backend.activities.mapper.ActivityDoneMapper;
 import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.models.ActivitySave;
+import activities.com.backend.activities.models.StatusEnum;
 import activities.com.backend.activities.repositories.ActivityDoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -129,6 +130,17 @@ public class ActivityDoneService {
             return activityDoneDTOList;
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting progress");
+        }
+    }
+
+    public ActivityDone updateAchieve(long id, StatusEnum status, Date duration) {
+        try {
+            ActivityDone activityDone = activityDoneRepository.findById(id);
+            activityDone.setStatus(status);
+            activityDone.setDuration(duration);
+            return activityDoneRepository.save(activityDone);
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error updating achieve");
         }
     }
 }

@@ -25,6 +25,13 @@ CREATE TABLE activities.activity (
        description VARCHAR
 );
 
+CREATE TABLE activities.category (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR,
+    icon VARCHAR,
+    description VARCHAR
+);
+
 CREATE TABLE activities.activity_save (
     id INTEGER PRIMARY KEY,
     activity_id INTEGER,
@@ -33,6 +40,7 @@ CREATE TABLE activities.activity_save (
     objective INTEGER,
     mark INTEGER,
     notes VARCHAR,
+    time TIMESTAMP,
     FOREIGN KEY (activity_id) REFERENCES activities.activity (id),
     FOREIGN KEY (user_id) REFERENCES public.user (id)
 );
@@ -42,6 +50,8 @@ CREATE TABLE activities.activity_done (
     done_on TIMESTAMP,
     achievement INTEGER,
     activity_save_id INTEGER,
+    duration TIMESTAMP,
+    status VARCHAR,
     FOREIGN KEY (activity_save_id) REFERENCES activities.activity_save (id)
 );
 

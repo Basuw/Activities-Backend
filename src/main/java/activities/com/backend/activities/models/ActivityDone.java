@@ -31,4 +31,7 @@ public class ActivityDone {
 
     private int mark;
     private String notes;
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
+    private Date duration;
 }

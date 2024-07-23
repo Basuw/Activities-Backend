@@ -3,6 +3,7 @@ package activities.com.backend.activities.controllers;
 import activities.com.backend.activities.dto.ActivityDoneDTO;
 import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.models.ActivitySave;
+import activities.com.backend.activities.models.StatusEnum;
 import activities.com.backend.activities.services.ActivityDoneService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -68,6 +69,18 @@ public class ActivityDoneController {
             return  ResponseEntity.ok().body(activityDoneService.addAchieve(activityDone));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding activity done");
+        }
+    }
+
+    @PatchMapping("/achieve/{id}")
+    @ApiOperation("update status and duration of activity done")
+    public ResponseEntity<ActivityDone> updateAchieve(@PathVariable long id,
+                                                      @RequestParam StatusEnum status,
+                                                      @RequestParam @DateTimeFormat(pattern= "HH:mm:ss") Date duration){
+        try {
+            return ResponseEntity.ok().body(activityDoneService.updateAchieve(id,status,duration));
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error adding achieve");
         }
     }
 
