@@ -45,4 +45,8 @@ public class ActivityService {
             throw new RuntimeException("Error adding activity");
         }
     }
+
+    public List<Activity> commonActivities() {
+        return activityRepository.findAllByUser(null);
+    }
 }
