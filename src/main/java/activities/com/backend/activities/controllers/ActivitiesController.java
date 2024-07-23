@@ -1,5 +1,8 @@
 package activities.com.backend.activities.controllers;
 
+import activities.com.backend.activities.dto.ActivityDTO;
+import activities.com.backend.activities.mapper.ActivityMapper;
+import activities.com.backend.activities.mapper.common.Mapper;
 import activities.com.backend.activities.models.Activity;
 import activities.com.backend.activities.services.ActivityDoneService;
 import activities.com.backend.activities.services.ActivityService;
@@ -34,9 +37,9 @@ public class ActivitiesController {
     }
 
     @GetMapping("/activity/{id}")
-    public ResponseEntity<Activity> getActivitiesById(@PathVariable long id){
+    public ResponseEntity<ActivityDTO> getActivitiesById(@PathVariable long id){
         try {
-            return ResponseEntity.ok().body(activityService.getActivitiesById(id));
+            return ResponseEntity.ok().body(ActivityMapper.INSTANCE.toDto(activityService.getActivitiesById(id)));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting all activities");
         }

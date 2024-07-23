@@ -1,5 +1,6 @@
 package activities.com.backend.activities.models;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,4 +24,8 @@ public class Activity {
     private String description;
     private String unity;
     private String icon;
+    @Nullable
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 }
