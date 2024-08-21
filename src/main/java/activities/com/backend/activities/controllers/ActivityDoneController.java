@@ -1,6 +1,7 @@
 package activities.com.backend.activities.controllers;
 
 import activities.com.backend.activities.dto.ActivityDoneDTO;
+import activities.com.backend.activities.dto.ActivityProgressDTO;
 import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.models.ActivitySave;
 import activities.com.backend.activities.models.DayEnum;
@@ -65,7 +66,7 @@ public class ActivityDoneController {
 
     @GetMapping("/day_activities/user_id/{user_id}")
     @ApiOperation("Get all activities done and save by user for a day")
-    public ResponseEntity<List<ActivityDoneDTO>> getDayActivitiesByUserId(@PathVariable long user_id, @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date date){
+    public ResponseEntity<List<ActivityProgressDTO>> getDayActivitiesByUserId(@PathVariable long user_id, @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date date){
         try {
             LOGGER.info("date : {}", date);
             return ResponseEntity.ok().body(activityDoneService.getDayActivitiesByUserIdAndDateAndDay(user_id,date));

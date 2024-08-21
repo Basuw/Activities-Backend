@@ -1,6 +1,7 @@
 package activities.com.backend.activities.services;
 
 import activities.com.backend.activities.dto.ActivityDoneDTO;
+import activities.com.backend.activities.dto.ActivityProgressDTO;
 import activities.com.backend.activities.mapper.ActivityDoneMapper;
 import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.models.ActivitySave;
@@ -151,7 +152,7 @@ public class ActivityDoneService {
         }
     }
 
-    public List<ActivityDoneDTO> getDayActivitiesByUserIdAndDateAndDay(long userId, Date date) {
+    public List<ActivityProgressDTO> getDayActivitiesByUserIdAndDateAndDay(long userId, Date date) {
         try {
             List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySave_UserIdAndDoneOn(userId,date);
             Calendar calendar = Calendar.getInstance();
@@ -171,7 +172,13 @@ public class ActivityDoneService {
                     activityDoneList.add(activityDone);
                 }
             });
-            return toDtos(activityDoneList);
+            List<ActivityDoneDTO> activityDoneDTOList =  toDtos(activityDoneList);
+            List<ActivityProgressDTO> activityProgressDTOList = new ArrayList<>();
+            activityDoneDTOList.forEach(activityDone -> {
+                ActivityProgressDTO activityProgressDTO = new ActivityProgressDTO(activityDone,89,1);
+                activityProgressDTOList.add(activityProgressDTO);
+            });
+            return activityProgressDTOList;
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting day activities");
         }
