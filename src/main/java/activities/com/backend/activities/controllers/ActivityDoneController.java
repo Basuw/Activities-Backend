@@ -55,6 +55,7 @@ public class ActivityDoneController {
     @ApiOperation("Get all activities done by user")
     public ResponseEntity<List<ActivityDone>> getAchieveByUserId(@PathVariable long user_id){
         try {
+            LOGGER.info("Getting all activities done by user with id: {}", user_id);
             return ResponseEntity.ok().body(activityDoneService.getAchieveByUserId(user_id));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting user with id : "+user_id);

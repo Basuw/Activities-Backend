@@ -21,7 +21,6 @@ public class ActivitySave {
     @Id
     @GeneratedValue(strategy = SEQUENCE,generator = "savedSequence")
     private int id;
-    //private int activityId;
     private float frequency;
     private float objective;
     private Date time;

@@ -4,6 +4,7 @@ import activities.com.backend.activities.dto.ActivityDTO;
 import activities.com.backend.activities.models.Activity;
 import activities.com.backend.activities.services.ActivityDoneService;
 import activities.com.backend.activities.services.ActivityService;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping(ACTIVITY)
-public class ActivitiesController {
+public class ActivityController {
 
     private final ActivityService activityService;
     private final Logger LOGGER = LoggerFactory.getLogger(ActivityDoneService.class);
 
     @Autowired
-    public ActivitiesController(ActivityService activityService){
+    public ActivityController(ActivityService activityService){
         this.activityService = activityService;
     }
 
@@ -44,6 +45,7 @@ public class ActivitiesController {
     }
 
     @GetMapping("/activity/common")
+    @ApiOperation("Get all common activities")
     public ResponseEntity<List<Activity>> getCommonActivities(){
         try {
             return ResponseEntity.ok().body(activityService.commonActivities());
@@ -53,6 +55,7 @@ public class ActivitiesController {
     }
 
     @GetMapping("/activity/custom/user/{id}")
+    @ApiOperation("Get activities created by the user")
     public ResponseEntity<List<ActivityDTO>> getCustomUserActivities(@PathVariable long id){
         try {
             return ResponseEntity.ok().body(activityService.userActivities(id));
@@ -62,6 +65,7 @@ public class ActivitiesController {
     }
 
     @GetMapping("/activity/all/user/{id}")
+    @ApiOperation("Get all common activities + the one created by the user")
     public ResponseEntity<List<ActivityDTO>> getAllUserActivitiesAndCommon(@PathVariable long id){
         try {
             return ResponseEntity.ok().body(activityService.userActivitiesAndCommon(id));
@@ -71,6 +75,7 @@ public class ActivitiesController {
     }
 
     @PostMapping("/activity")
+    @ApiOperation("Creation of an Activity")
     public ResponseEntity<Activity> addActivity(@RequestBody Activity activity){
         try {
             LOGGER.info("Saving activity: {}", activity);
@@ -80,6 +85,7 @@ public class ActivitiesController {
         }
     }
     @DeleteMapping("/activity/{id}")
+    @ApiOperation("Delete activity")
     public ResponseEntity<String> deleteActivity(@PathVariable long id){
         try {
             LOGGER.info("Deleting activity: with id: {}", id);
