@@ -27,7 +27,7 @@ public class ActivityController {
     }
 
     @GetMapping("/activity")
-    public ResponseEntity<List<Activity>> getAllActivities(){
+    public ResponseEntity<List<ActivityDTO>> getAllActivities(){
         try {
             return ResponseEntity.ok().body(activityService.getAllActivities());
         }catch (RuntimeException exception){
@@ -46,7 +46,7 @@ public class ActivityController {
 
     @GetMapping("/activity/common")
     @ApiOperation("Get all common activities")
-    public ResponseEntity<List<Activity>> getCommonActivities(){
+    public ResponseEntity<List<ActivityDTO>> getCommonActivities(){
         try {
             return ResponseEntity.ok().body(activityService.commonActivities());
         }catch (RuntimeException exception){

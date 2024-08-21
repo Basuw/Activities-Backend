@@ -21,9 +21,9 @@ public class ActivityService {
         this.activityRepository = activityRepository;
     }
 
-    public List<Activity> getAllActivities(){
+    public List<ActivityDTO> getAllActivities(){
         try {
-            return this.activityRepository.findAll();
+            return this.toDtos(this.activityRepository.findAll());
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting all activities");
         }
@@ -53,8 +53,8 @@ public class ActivityService {
         }
     }
 
-    public List<Activity> commonActivities() {
-        return activityRepository.findAllByUser(null);
+    public List<ActivityDTO> commonActivities() {
+        return this.toDtos(activityRepository.findAllByUser(null));
     }
 
     public List<ActivityDTO> userActivities(long userId) {
@@ -62,9 +62,10 @@ public class ActivityService {
     }
 
     public List<ActivityDTO> userActivitiesAndCommon(long id) {
-        List<Activity> activities = activityRepository.findAllByUserId(id);
+        List<ActivityDTO> activities = new ArrayList<>();
         activities.addAll(this.commonActivities());
-        return this.toDtos(activities);
+        activities.addAll(this.userActivities(id));
+        return activities;
     }
 
 
