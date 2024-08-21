@@ -4,8 +4,11 @@ import activities.com.backend.activities.dto.ActivityDoneDTO;
 import activities.com.backend.activities.mapper.ActivityDoneMapper;
 import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.models.ActivitySave;
+import activities.com.backend.activities.models.DayEnum;
 import activities.com.backend.activities.models.StatusEnum;
 import activities.com.backend.activities.repositories.ActivityDoneRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +17,15 @@ import java.util.*;
 @Service
 public class ActivityDoneService {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(ActivityDoneService.class);
+
     private final ActivityDoneRepository activityDoneRepository;
+    private final ActivitySaveService activitySaveService;
 
     @Autowired
-    public ActivityDoneService(ActivityDoneRepository activityDoneRepository){
+    public ActivityDoneService(ActivityDoneRepository activityDoneRepository, ActivitySaveService activitySaveService){
         this.activityDoneRepository = activityDoneRepository;
+        this.activitySaveService = activitySaveService;
     }
 
 
@@ -142,5 +149,39 @@ public class ActivityDoneService {
         }catch (RuntimeException exception){
             throw new RuntimeException("Error updating achieve");
         }
+    }
+
+    public List<ActivityDoneDTO> getDayActivitiesByUserIdAndDateAndDay(long userId, Date date) {
+        try {
+            List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySave_UserIdAndDoneOn(userId,date);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            DayEnum day = DayEnum.values()[calendar.get(Calendar.DAY_OF_WEEK)];
+            LOGGER.info("DayOFWeek : {}", Calendar.DAY_OF_WEEK);
+            LOGGER.info("calendar.get(Calendar.DAY_OF_WEEK) : {}", calendar.get(Calendar.DAY_OF_WEEK));
+            LOGGER.info("Getting all activities done by user with id: {}, on day{}", userId, day);
+            List<ActivitySave> activitySaveList = activitySaveService.getSaveByUserIdAndDay(userId,day);
+            activitySaveList.forEach(activitySave -> {
+                if (activityDoneList.stream().noneMatch(activityDone -> activityDone.getActivitySave().getId() == activitySave.getId())){
+                    ActivityDone activityDone = new ActivityDone();
+                    activityDone.setActivitySave(activitySave);
+                    activityDone.setDoneOn(date);
+                    activityDone.setAchievement(0);
+                    activityDone.setStatus(StatusEnum.NOT_STARTED);
+                    activityDoneList.add(activityDone);
+                }
+            });
+            return toDtos(activityDoneList);
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error getting day activities");
+        }
+    }
+
+    public List<ActivityDoneDTO> toDtos(List<ActivityDone> activityDoneList) {
+        List<ActivityDoneDTO> activityDoneDTOList = new ArrayList<>();
+        for (ActivityDone activityDone : activityDoneList){
+            activityDoneDTOList.add(ActivityDoneMapper.INSTANCE.toDto(activityDone));
+        }
+        return activityDoneDTOList;
     }
 }

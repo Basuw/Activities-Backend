@@ -3,6 +3,7 @@ package activities.com.backend.activities.controllers;
 import activities.com.backend.activities.dto.ActivityDoneDTO;
 import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.models.ActivitySave;
+import activities.com.backend.activities.models.DayEnum;
 import activities.com.backend.activities.models.StatusEnum;
 import activities.com.backend.activities.services.ActivityDoneService;
 import io.swagger.annotations.ApiOperation;
@@ -57,6 +58,17 @@ public class ActivityDoneController {
         try {
             LOGGER.info("Getting all activities done by user with id: {}", user_id);
             return ResponseEntity.ok().body(activityDoneService.getAchieveByUserId(user_id));
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error getting user with id : "+user_id);
+        }
+    }
+
+    @GetMapping("/day_activities/user_id/{user_id}")
+    @ApiOperation("Get all activities done and save by user for a day")
+    public ResponseEntity<List<ActivityDoneDTO>> getDayActivitiesByUserId(@PathVariable long user_id, @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date date){
+        try {
+            LOGGER.info("date : {}", date);
+            return ResponseEntity.ok().body(activityDoneService.getDayActivitiesByUserIdAndDateAndDay(user_id,date));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting user with id : "+user_id);
         }

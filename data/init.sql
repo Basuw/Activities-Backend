@@ -34,13 +34,14 @@ CREATE TABLE activities.category (
 
 CREATE TABLE activities.activity_save (
     id INTEGER PRIMARY KEY,
-    activity_id INTEGER,
-    user_id INTEGER,
+    activity_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
     frequency INTEGER,
     objective INTEGER,
     mark INTEGER,
     notes VARCHAR,
     time TIMESTAMP,
+    day TIMESTAMP,
     FOREIGN KEY (activity_id) REFERENCES activities.activity (id),
     FOREIGN KEY (user_id) REFERENCES public.user (id)
 );

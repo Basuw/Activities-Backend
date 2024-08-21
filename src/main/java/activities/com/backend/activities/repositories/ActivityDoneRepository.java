@@ -22,4 +22,6 @@ public interface ActivityDoneRepository extends CrudRepository<ActivityDone, Lon
     List<ActivityDone> getAllByActivitySaveIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(long activitySaveId, Date begindate, Date enddate);
 
     List<ActivityDone> getAllByActivitySave_UserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(long userId, Date begindate, Date enddate);
+
+    List<ActivityDone> getAllByActivitySave_UserIdAndDoneOn(long userId, Date date);
 }

@@ -1,6 +1,7 @@
 package activities.com.backend.activities.services;
 
 import activities.com.backend.activities.models.ActivitySave;
+import activities.com.backend.activities.models.DayEnum;
 import activities.com.backend.activities.repositories.ActivitySaveRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +15,6 @@ public class ActivitySaveService {
     public ActivitySaveService(ActivitySaveRepository activitySaveRepository) {
         this.activitySaveRepository = activitySaveRepository;
     }
-
-
 
     public List<ActivitySave> getAllSave(){
         try {
@@ -54,6 +53,14 @@ public class ActivitySaveService {
             return activitySaveRepository.findAllByUserId(userId);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting user saves");
+        }
+    }
+
+    public List<ActivitySave> getSaveByUserIdAndDay(long userId, DayEnum day){
+        try {
+            return activitySaveRepository.findAllByUserIdAndDay(userId, day);
+        } catch (RuntimeException exception) {
+            throw new RuntimeException("Error getting save by user with id : " + userId);
         }
     }
 }

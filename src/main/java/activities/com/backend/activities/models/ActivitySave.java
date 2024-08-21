@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
@@ -24,6 +25,9 @@ public class ActivitySave {
     private float frequency;
     private float objective;
     private Date time;
+    @Enumerated(EnumType.STRING)
+    private DayEnum day;
+    private String notes;
 
     @ManyToOne
     @JoinColumn(name = "activity_id", referencedColumnName = "id")
