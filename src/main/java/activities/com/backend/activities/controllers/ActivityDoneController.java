@@ -70,7 +70,7 @@ public class ActivityDoneController {
             LOGGER.info("date : {}", date);
             return ResponseEntity.ok().body(activityDoneService.getWeekActivitiesByUserIdAndDate(user_id,date));
         }catch (RuntimeException exception){
-            throw new RuntimeException("Error getting user with id : "+user_id);
+            throw new RuntimeException("Error while returning activities done"+exception.getMessage());
         }
     }
 

@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -16,11 +17,24 @@ public class CalendarService {
     }
 
     public DayEnum getDayFromDate(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+        LOGGER.info("DayEnum : {}", DayEnum.valueOf(sdf.format(date).toUpperCase()));
+        return DayEnum.valueOf(sdf.format(date).toUpperCase());
+    }
+
+    public Date getDateOfFirstDayOfWeek(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        DayEnum day = DayEnum.values()[calendar.get(Calendar.DAY_OF_WEEK)];
-        LOGGER.info("DayOFWeek : {}", Calendar.DAY_OF_WEEK);
-        LOGGER.info("calendar.get(Calendar.DAY_OF_WEEK) : {}", calendar.get(Calendar.DAY_OF_WEEK));
-        return day;
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        return calendar.getTime();
+    }
+
+    public Date getDateOfLastDayOfWeek(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        return calendar.getTime();
     }
 }
