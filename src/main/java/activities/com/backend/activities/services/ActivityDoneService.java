@@ -1,8 +1,8 @@
 package activities.com.backend.activities.services;
 
-import activities.com.backend.activities.dto.ActivityDoneDTO;
-import activities.com.backend.activities.dto.ActivityProgressDTO;
+import activities.com.backend.activities.dto.*;
 import activities.com.backend.activities.mapper.ActivityDoneMapper;
+import activities.com.backend.activities.mapper.ActivityMapper;
 import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.models.ActivitySave;
 import activities.com.backend.activities.models.DayEnum;
@@ -23,10 +23,13 @@ public class ActivityDoneService {
     private final ActivityDoneRepository activityDoneRepository;
     private final ActivitySaveService activitySaveService;
 
+    private final CalendarService calendarService;
+
     @Autowired
-    public ActivityDoneService(ActivityDoneRepository activityDoneRepository, ActivitySaveService activitySaveService){
+    public ActivityDoneService(ActivityDoneRepository activityDoneRepository, ActivitySaveService activitySaveService, CalendarService calendarService){
         this.activityDoneRepository = activityDoneRepository;
         this.activitySaveService = activitySaveService;
+        this.calendarService = calendarService;
     }
 
 
@@ -152,36 +155,45 @@ public class ActivityDoneService {
         }
     }
 
-    public List<ActivityProgressDTO> getDayActivitiesByUserIdAndDateAndDay(long userId, Date date) {
+    public List<ActivityDone> getActivitiesDoneByUserIdAndDateAndActivitySaveOnDay(long userId, Date date) {
         try {
             List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySave_UserIdAndDoneOn(userId,date);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            DayEnum day = DayEnum.values()[calendar.get(Calendar.DAY_OF_WEEK)];
-            LOGGER.info("DayOFWeek : {}", Calendar.DAY_OF_WEEK);
-            LOGGER.info("calendar.get(Calendar.DAY_OF_WEEK) : {}", calendar.get(Calendar.DAY_OF_WEEK));
-            LOGGER.info("Getting all activities done by user with id: {}, on day{}", userId, day);
+            DayEnum day = calendarService.getDayFromDate(date);
             List<ActivitySave> activitySaveList = activitySaveService.getSaveByUserIdAndDay(userId,day);
-            activitySaveList.forEach(activitySave -> {
-                if (activityDoneList.stream().noneMatch(activityDone -> activityDone.getActivitySave().getId() == activitySave.getId())){
-                    ActivityDone activityDone = new ActivityDone();
-                    activityDone.setActivitySave(activitySave);
-                    activityDone.setDoneOn(date);
-                    activityDone.setAchievement(0);
-                    activityDone.setStatus(StatusEnum.NOT_STARTED);
-                    activityDoneList.add(activityDone);
-                }
-            });
-            List<ActivityDoneDTO> activityDoneDTOList =  toDtos(activityDoneList);
-            List<ActivityProgressDTO> activityProgressDTOList = new ArrayList<>();
-            activityDoneDTOList.forEach(activityDone -> {
-                ActivityProgressDTO activityProgressDTO = new ActivityProgressDTO(activityDone,89,1);
-                activityProgressDTOList.add(activityProgressDTO);
-            });
-            return activityProgressDTOList;
+            activityDoneList.addAll(saveToDone(activitySaveList,activityDoneList));
+            return activityDoneList;
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting day activities");
         }
+    }
+
+    public List<ActivityProgressDTO> getWeekActivitiesByUserIdAndDate(long userId, Date date) {
+        try {
+            List<ActivityDone> activityDoneList = this.getActivitiesDoneByUserIdAndDateAndActivitySaveOnDay(userId,date);
+            List<ActivityProgressDTO> activityProgressDTOList = new ArrayList<>();
+            activityDoneList.forEach(activityDone -> {
+                ActivityDTO activityDTO = ActivityMapper.INSTANCE.toDto(activityDone.getActivitySave().getActivity());
+                ActivitySaveWtActivityDTO activitySaveWtActivityDTO = new ActivitySaveWtActivityDTO(activityDone.getActivitySave(),activityDTO);
+                ActivityDoneWtActivitySaveDTO activityDoneWtActivitySaveDTO = new ActivityDoneWtActivitySaveDTO(activityDone,activitySaveWtActivityDTO);
+                activityProgressDTOList.add(new ActivityProgressDTO(activityDoneWtActivitySaveDTO,10,1));
+            });
+            return activityProgressDTOList;
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error getting week activities");
+        }
+    }
+
+    public List<ActivityDone> saveToDone(List<ActivitySave> activitySaveList, List<ActivityDone> activityDoneList) {
+        activitySaveList.forEach(activitySave -> {
+            if (activityDoneList.stream().noneMatch(activityDone -> activityDone.getActivitySave().getId() == activitySave.getId())){
+                ActivityDone activityDone = new ActivityDone();
+                activityDone.setActivitySave(activitySave);
+                activityDone.setDoneOn(null);
+                activityDone.setAchievement(0);
+                activityDone.setStatus(StatusEnum.NOT_STARTED);
+            }
+        });
+        return activityDoneList;
     }
 
     public List<ActivityDoneDTO> toDtos(List<ActivityDone> activityDoneList) {

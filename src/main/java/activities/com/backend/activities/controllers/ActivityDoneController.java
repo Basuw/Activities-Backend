@@ -4,7 +4,6 @@ import activities.com.backend.activities.dto.ActivityDoneDTO;
 import activities.com.backend.activities.dto.ActivityProgressDTO;
 import activities.com.backend.activities.models.ActivityDone;
 import activities.com.backend.activities.models.ActivitySave;
-import activities.com.backend.activities.models.DayEnum;
 import activities.com.backend.activities.models.StatusEnum;
 import activities.com.backend.activities.services.ActivityDoneService;
 import io.swagger.annotations.ApiOperation;
@@ -19,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import static activities.com.backend.activities.utilities.*;
+import static activities.com.backend.activities.utilities.ACTIVITY;
 
 @RestController
 @RequestMapping(ACTIVITY)
@@ -69,7 +68,7 @@ public class ActivityDoneController {
     public ResponseEntity<List<ActivityProgressDTO>> getDayActivitiesByUserId(@PathVariable long user_id, @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date date){
         try {
             LOGGER.info("date : {}", date);
-            return ResponseEntity.ok().body(activityDoneService.getDayActivitiesByUserIdAndDateAndDay(user_id,date));
+            return ResponseEntity.ok().body(activityDoneService.getWeekActivitiesByUserIdAndDate(user_id,date));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting user with id : "+user_id);
         }
