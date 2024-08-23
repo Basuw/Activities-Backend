@@ -98,25 +98,9 @@ public class ActivityDoneService {
         }
     }
 
-    public Double progressByActUsrIdBeginEndDate(long activityId, Date begindate, Date enddate) {
+    public Double progressByActIdAndUserIDBeginEndDate(long activityId, long userId, Date begindate, Date enddate) {
         try {
-            List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySave_UserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(activityId,begindate,enddate);
-            float progress = 0;
-            float objective = activityDoneList.getFirst().getActivitySave().getObjective();
-            float frequency = activityDoneList.getFirst().getActivitySave().getFrequency();
-            for (ActivityDone activityDone : activityDoneList){
-                progress += activityDone.getAchievement();
-            }
-
-            return (double) ((progress/(objective*frequency))*100);
-        }catch (RuntimeException exception){
-            throw new RuntimeException("Error getting progress");
-        }
-    }
-
-    public Double progressByActIdBeginEndDate(long activityId, Date begindate, Date enddate) {
-        try {
-            List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySaveActivityIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(activityId,begindate,enddate);
+            List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySaveActivityIdAndActivitySaveUserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(activityId,userId,begindate,enddate);
             if (activityDoneList.isEmpty()){
                 return 0.0;
             }
@@ -193,20 +177,14 @@ public class ActivityDoneService {
                 ActivityDTO activityDTO = ActivityMapper.INSTANCE.toDto(activityDone.getActivitySave().getActivity());
                 ActivitySaveWtActivityDTO activitySaveWtActivityDTO = new ActivitySaveWtActivityDTO(activityDone.getActivitySave(),activityDTO);
                 ActivityDoneWtActivitySaveDTO activityDoneWtActivitySaveDTO = new ActivityDoneWtActivitySaveDTO(activityDone,activitySaveWtActivityDTO);
-                LOGGER.info("getActivitySave.activity.id : {}",activityDone.getActivitySave().getActivity().getId());
-                LOGGER.info("getActivitySave.activity.name : {}",activityDone.getActivitySave().getActivity().getName());
-                LOGGER.info("getActivitySave.id : {}",activityDone.getActivitySave().getId());
                 activityProgressDTOList.add(new ActivityProgressDTO(
                     activityDoneWtActivitySaveDTO,
-                    progressByActIdBeginEndDate(activityDone.getActivitySave().getActivity().getId(), calendarService.getDateOfFirstDayOfWeek(date), calendarService.getDateOfLastDayOfWeek(date)),
+                        progressByActIdAndUserIDBeginEndDate(activityDone.getActivitySave().getActivity().getId(), userId,calendarService.getDateOfFirstDayOfWeek(date), calendarService.getDateOfLastDayOfWeek(date)),
                     1));
             });
-
-            LOGGER.info("first : {}", calendarService.getDateOfFirstDayOfWeek(date));
-            LOGGER.info("last : {}", calendarService.getDateOfLastDayOfWeek(date));
             return activityProgressDTOList;
         }catch (RuntimeException exception){
-            throw new RuntimeException("Error getting week activities");
+            throw new RuntimeException("Error getting week activities "+ exception.getMessage());
         }
     }
 

@@ -143,11 +143,12 @@ public class ActivityDoneController {
 
     @GetMapping("/achieve/progress/activity")
     @ApiOperation("Activity done by user id and activity id date later than given date")
-    public ResponseEntity<Double> getProgressByActUsrIdBeginEndDate(@RequestParam long activity_save_id,
+    public ResponseEntity<Double> getProgressByActUsrIdBeginEndDate(@RequestParam long activity_id,
+                                                                    @RequestParam long user_id,
                                                                     @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date begin_date,
                                                                     @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date end_date){
         try {
-            return ResponseEntity.ok().body(activityDoneService.progressByActUsrIdBeginEndDate(activity_save_id,begin_date,end_date));
+            return ResponseEntity.ok().body(activityDoneService.progressByActIdAndUserIDBeginEndDate(activity_id,user_id,begin_date,end_date));
         }catch (RuntimeException exception){
             throw new RuntimeException(exception.getMessage());
         }
@@ -155,11 +156,12 @@ public class ActivityDoneController {
 
     @GetMapping("/achieve/progress/detailed")
     @ApiOperation("Activity done by user id and activity id date later than given date")
-    public ResponseEntity<List<ActivityDoneDTO>> getProgressByActSaveIdBeginEndDateDetailed(@RequestParam long activity_save_id,
+    public ResponseEntity<List<ActivityDoneDTO>> getProgressByActSaveIdBeginEndDateDetailed(@RequestParam long activity_id,
                                                                     @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date begin_date,
                                                                     @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date end_date){
         try {
-            return ResponseEntity.ok().body(activityDoneService.progressByActSaveIdBeginEndDateDetailed(activity_save_id,begin_date,end_date));
+            //TODO activityID and not activitySaveId
+            return ResponseEntity.ok().body(activityDoneService.progressByActSaveIdBeginEndDateDetailed(activity_id,begin_date,end_date));
         }catch (RuntimeException exception){
             throw new RuntimeException(exception.getMessage());
         }
