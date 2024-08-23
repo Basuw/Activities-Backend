@@ -141,8 +141,8 @@ public class ActivityDoneController {
         }
     }
 
-    @GetMapping("/achieve/progress/activity")
-    @ApiOperation("Activity done by user id and activity id date later than given date")
+    @GetMapping("/achieve/progress")
+    @ApiOperation("Progress of the activity done by user id between dates given")
     public ResponseEntity<Double> getProgressByActUsrIdBeginEndDate(@RequestParam long activity_id,
                                                                     @RequestParam long user_id,
                                                                     @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date begin_date,
@@ -157,18 +157,18 @@ public class ActivityDoneController {
     @GetMapping("/achieve/progress/detailed")
     @ApiOperation("Activity done by user id and activity id date later than given date")
     public ResponseEntity<List<ActivityDoneDTO>> getProgressByActSaveIdBeginEndDateDetailed(@RequestParam long activity_id,
+                                                                    @RequestParam long user_id,
                                                                     @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date begin_date,
                                                                     @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date end_date){
         try {
-            //TODO activityID and not activitySaveId
-            return ResponseEntity.ok().body(activityDoneService.progressByActSaveIdBeginEndDateDetailed(activity_id,begin_date,end_date));
+            return ResponseEntity.ok().body(activityDoneService.progressByActIdAndUserIDBeginEndDateDetailed(activity_id, user_id, begin_date,end_date));
         }catch (RuntimeException exception){
             throw new RuntimeException(exception.getMessage());
         }
     }
 
-    @GetMapping("/achieve/progress/user")
-    @ApiOperation("Activity done by user id and activity id date later than given date")
+    @GetMapping("/achieve/global-progress/user")
+    @ApiOperation("Progress of a user on all his activities between dates given")
     public ResponseEntity<Map<ActivitySave,Double>> getProgressByUsrIdBeginEndDate(@RequestParam int user_id,
                                                                                    @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date begin_date,
                                                                                    @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date end_date){

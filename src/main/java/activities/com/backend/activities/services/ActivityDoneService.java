@@ -133,9 +133,9 @@ public class ActivityDoneService {
         }
     }
 
-    public List<ActivityDoneDTO> progressByActSaveIdBeginEndDateDetailed(long activitySaveId, Date beginDate, Date endDate) {
+    public List<ActivityDoneDTO> progressByActIdAndUserIDBeginEndDateDetailed(long activityId, long userId,Date beginDate, Date endDate) {
         try {
-            List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySaveIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(activitySaveId,beginDate,endDate);
+            List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySaveActivityIdAndActivitySaveUserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(activityId, userId,beginDate,endDate);
             List<ActivityDoneDTO> activityDoneDTOList = new ArrayList<>();
             for (ActivityDone activityDone : activityDoneList){
                 activityDoneDTOList.add(ActivityDoneMapper.INSTANCE.toDto(activityDone));
