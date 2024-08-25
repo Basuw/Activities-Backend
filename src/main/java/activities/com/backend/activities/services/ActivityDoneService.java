@@ -146,11 +146,14 @@ public class ActivityDoneService {
         }
     }
 
-    public ActivityDone updateAchieve(long id, StatusEnum status, Date duration) {
+    public ActivityDone updateAchieve(long id, float achievement, StatusEnum status, int mark, String notes, Date duration) {
         try {
             ActivityDone activityDone = activityDoneRepository.findById(id);
             activityDone.setStatus(status);
             activityDone.setDuration(duration);
+            activityDone.setAchievement(achievement);
+            activityDone.setMark(mark);
+            activityDone.setNotes(notes);
             return activityDoneRepository.save(activityDone);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error updating achieve");
@@ -159,7 +162,8 @@ public class ActivityDoneService {
 
     public List<ActivityDone> getActivitiesDoneByUserIdAndDateAndActivitySaveOnDay(long userId, Date date) {
         try {
-            List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySave_UserIdAndDoneOn(userId,date);
+            LOGGER.info("day : {}", calendarService.getDateWithEndOfDay(date));
+            List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySave_UserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(userId,date,calendarService.getDateWithEndOfDay(date));
             DayEnum day = calendarService.getDayFromDate(date);
             List<ActivitySave> activitySaveList = activitySaveService.getSaveByUserIdAndDay(userId,day);
             activityDoneList.addAll(saveToDone(activitySaveList,activityDoneList));
