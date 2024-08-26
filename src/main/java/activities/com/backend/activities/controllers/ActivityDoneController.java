@@ -88,15 +88,22 @@ public class ActivityDoneController {
     @PatchMapping("/achieve/{id}")
     @ApiOperation("update status and duration of activity done")
     public ResponseEntity<ActivityDone> updateAchieve(@PathVariable long id,
-                                                      @RequestParam(required = false)  float achievement,
+                                                      @RequestParam(required = false)  Float achievement,
                                                       @RequestParam(required = false) StatusEnum status,
-                                                      @RequestParam(required = false) int mark,
+                                                      @RequestParam(required = false) Integer mark,
                                                       @RequestParam(required = false) String notes,
                                                       @RequestParam(required = false) @DateTimeFormat(pattern= "HH:mm:ss") Date duration){
         try {
             LOGGER.info("Updating activity done: with id: {}", id);
             LOGGER.info("achievement: {}, status: {}, mark: {}, notes: {}, duration: {}", achievement, status, mark, notes, duration);
-            return ResponseEntity.ok().body(activityDoneService.updateAchieve(id,achievement,status,mark,notes,duration));
+            ActivityDone currentActivityDone = activityDoneService.getAchieveById(id);
+            return ResponseEntity.ok().body(activityDoneService.updateAchieve(
+                    id,
+                    achievement==null ? currentActivityDone.getAchievement() : achievement,
+                    status==null ? currentActivityDone.getStatus() : status,
+                    mark==null ? currentActivityDone.getMark() : mark,
+                    notes==null ? currentActivityDone.getNotes() : notes,
+                    duration==null ? currentActivityDone.getDuration() : duration));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding achieve");
         }

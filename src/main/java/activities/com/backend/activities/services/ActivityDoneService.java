@@ -169,7 +169,7 @@ public class ActivityDoneService {
             activityDoneList.addAll(saveToDone(activitySaveList,activityDoneList));
             return activityDoneList;
         }catch (RuntimeException exception){
-            throw new RuntimeException("Error getting day activities");
+            throw new RuntimeException("Error getting day activities ->" + exception.getMessage());
         }
     }
 
