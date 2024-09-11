@@ -62,7 +62,7 @@ public class ActivityDoneService {
         try {
             this.activityDoneRepository.deleteById(id);
         }catch (RuntimeException exception){
-            throw new RuntimeException("Error adding achieve");
+            throw new RuntimeException("Error deleting achieve");
         }
     }
 

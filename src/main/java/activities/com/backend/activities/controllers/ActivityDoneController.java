@@ -116,7 +116,7 @@ public class ActivityDoneController {
             LOGGER.info("Deleting activity done: with id: {}", id);
             activityDoneService.deleteAchieve(id);
         }catch (RuntimeException exception){
-            throw new RuntimeException("Error adding achieve");
+            throw new RuntimeException("Error deleting achieve");
         }
         return ResponseEntity.ok().body("deleted "+id);
     }
@@ -179,7 +179,7 @@ public class ActivityDoneController {
         }
     }
 
-    @GetMapping("/achieve/global-progress/user")
+    @GetMapping("/achieve/progress/global")
     @ApiOperation("Progress of a user on all his activities between dates given")
     public ResponseEntity<Map<ActivitySave,Double>> getProgressByUsrIdBeginEndDate(@RequestParam int user_id,
                                                                                    @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date begin_date,
