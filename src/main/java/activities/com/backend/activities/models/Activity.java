@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Entity
@@ -24,6 +22,7 @@ public class Activity {
     private String description;
     private String unity;
     private String icon;
+    private String category;
     @Nullable
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

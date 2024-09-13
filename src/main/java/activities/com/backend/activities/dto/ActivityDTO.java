@@ -11,5 +11,6 @@ public class ActivityDTO {
     private String description;
     private String unity;
     private String icon;
+    private String category;
     private int userId;
 }

@@ -22,7 +22,8 @@ CREATE TABLE activities.activity (
        name VARCHAR,
        icon VARCHAR,
        unity VARCHAR,
-       description VARCHAR
+       description VARCHAR,
+        category VARCHAR
 );
 
 CREATE TABLE activities.category (
@@ -151,9 +152,9 @@ CREATE SEQUENCE public.user_sequence
 
 INSERT INTO public.user VALUES (nextval('public.user_sequence'), 'user1', 'admin','email@admin.fr','admin1234', '2021-01-01', '1990-01-01', 80, 180, 15);
 
-INSERT INTO activities.activity VALUES (nextval('activities.activity_sequence'), 'activity1', 'icon1', 'unity1', 'description1');
-INSERT INTO activities.activity VALUES (nextval('activities.activity_sequence'), 'activity2', 'icon2', 'unity2', 'description2');
-INSERT INTO activities.activity VALUES (nextval('activities.activity_sequence'), 'activity3', 'icon3', 'unity3', 'description3');
+INSERT INTO activities.activity VALUES (nextval('activities.activity_sequence'), 'activity1', 'icon1', 'unity1', 'description1','category1');
+INSERT INTO activities.activity VALUES (nextval('activities.activity_sequence'), 'activity2', 'icon2', 'unity2', 'description2','category2');
+INSERT INTO activities.activity VALUES (nextval('activities.activity_sequence'), 'activity3', 'icon3', 'unity3', 'description3','category3');
 
 INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 1, 1, 3, 5,3,"Felt bad");
 INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 2, 1, 2, 3,5,"Nice feelings");

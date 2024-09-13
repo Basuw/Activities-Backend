@@ -36,6 +36,7 @@ public class ActivityController {
     }
 
     @GetMapping("/activity/{id}")
+    @ApiOperation("Get activity with given id")
     public ResponseEntity<Activity> getActivitiesById(@PathVariable long id){
         try {
             return ResponseEntity.ok().body(activityService.getActivitiesById(id));
@@ -55,9 +56,10 @@ public class ActivityController {
     }
 
     @GetMapping("/activity/custom/user/{id}")
-    @ApiOperation("Get activities created by the user")
+    @ApiOperation("Get all common activities plus activities created by the user given")
     public ResponseEntity<List<ActivityDTO>> getCustomUserActivities(@PathVariable long id){
         try {
+            LOGGER.info("Getting activities of user with id: {}", id);
             return ResponseEntity.ok().body(activityService.userActivities(id));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting all activities");
