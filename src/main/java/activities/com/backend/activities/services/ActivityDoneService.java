@@ -166,6 +166,7 @@ public class ActivityDoneService {
             List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySave_UserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(userId,date,calendarService.getDateWithEndOfDay(date));
             DayEnum day = calendarService.getDayFromDate(date);
             List<ActivitySave> activitySaveList = activitySaveService.getSaveByUserIdAndDay(userId,day);
+            activitySaveList.addAll(activitySaveService.getSaveByUserIdAndDay(userId,null));
             activityDoneList.addAll(saveToDone(activitySaveList,activityDoneList));
             return activityDoneList;
         }catch (RuntimeException exception){
