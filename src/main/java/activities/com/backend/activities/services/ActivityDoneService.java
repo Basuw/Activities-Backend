@@ -147,7 +147,7 @@ public class ActivityDoneService {
         }
     }
 
-    public ActivityDone updateAchieve(long id, float achievement, StatusEnum status, int mark, String notes, Date duration) {
+    public ActivityDone updateAchieve(long id, float achievement, StatusEnum status, int mark, String notes, Date doneOn, Date duration) {
         try {
             ActivityDone activityDone = activityDoneRepository.findById(id);
             activityDone.setStatus(status);
@@ -155,6 +155,7 @@ public class ActivityDoneService {
             activityDone.setAchievement(achievement);
             activityDone.setMark(mark);
             activityDone.setNotes(notes);
+            activityDone.setDoneOn(doneOn);
             return activityDoneRepository.save(activityDone);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error updating achieve");

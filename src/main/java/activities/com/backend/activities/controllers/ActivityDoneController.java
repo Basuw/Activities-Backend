@@ -92,6 +92,7 @@ public class ActivityDoneController {
                                                       @RequestParam(required = false) StatusEnum status,
                                                       @RequestParam(required = false) Integer mark,
                                                       @RequestParam(required = false) String notes,
+                                                      @RequestParam(required = false) @DateTimeFormat(pattern= "yyyy-MM-dd HH:mm:ss") Date doneOn,
                                                       @RequestParam(required = false) @DateTimeFormat(pattern= "HH:mm:ss") Date duration){
         try {
             LOGGER.info("Updating activity done: with id: {}", id);
@@ -103,6 +104,7 @@ public class ActivityDoneController {
                     status==null ? currentActivityDone.getStatus() : status,
                     mark==null ? currentActivityDone.getMark() : mark,
                     notes==null ? currentActivityDone.getNotes() : notes,
+                    doneOn==null ? currentActivityDone.getDoneOn() : doneOn,
                     duration==null ? currentActivityDone.getDuration() : duration));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding achieve");
