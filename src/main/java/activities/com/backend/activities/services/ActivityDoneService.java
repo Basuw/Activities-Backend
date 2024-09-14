@@ -49,8 +49,10 @@ public class ActivityDoneService {
         }
     }
 
-    public ActivityDone addAchieve(ActivityDone activityDone){
+    public ActivityDone addAchieve(ActivityDone activityDone, Date date){
         try {
+            LOGGER.info("date : {}", date);
+            activityDone.setDoneOn(date);
             return this.activityDoneRepository.save(activityDone);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding user");

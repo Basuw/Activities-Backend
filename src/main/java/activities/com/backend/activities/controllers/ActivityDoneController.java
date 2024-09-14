@@ -76,10 +76,10 @@ public class ActivityDoneController {
 
     @PostMapping("/achieve")
     @ApiOperation("Add activity done")
-    public ResponseEntity<ActivityDone> addAchieve(@RequestBody ActivityDone activityDone){
+    public ResponseEntity<ActivityDone> addAchieve(@RequestBody ActivityDone activityDone, @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd HH:mm:ss") Date doneOn){
         try {
             LOGGER.info("Saving activity done: {}", activityDone);
-            return  ResponseEntity.ok().body(activityDoneService.addAchieve(activityDone));
+            return  ResponseEntity.ok().body(activityDoneService.addAchieve(activityDone, doneOn));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding activity done");
         }
