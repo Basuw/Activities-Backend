@@ -67,7 +67,6 @@ public class ActivityDoneController {
     @ApiOperation("Get all activities done and save by user for a day")
     public ResponseEntity<List<ActivityProgressDTO>> getDayActivitiesByUserId(@PathVariable long user_id, @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd") Date date){
         try {
-            LOGGER.info("date : {}", date);
             return ResponseEntity.ok().body(activityDoneService.getWeekActivitiesByUserIdAndDate(user_id,date));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error while returning activities done"+exception.getMessage());

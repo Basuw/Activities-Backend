@@ -117,6 +117,16 @@ public class ActivityDoneService {
         }
     }
 
+    public int numberOfActivityFinishedBetweenDates(long activityId, long userId, Date begindate, Date enddate) {
+        final int[] count = {0};
+        activityDoneRepository.getAllByActivitySaveActivityIdAndActivitySaveUserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(activityId,userId,begindate,enddate).forEach(activityDone -> {
+            if (activityDone.getAchievement()==activityDone.getActivitySave().getObjective()){
+                count[0]++;
+            }
+        });
+        return count[0];
+    }
+
     public Map<ActivitySave,Double> progressByUsrIdBeginEndDate(long userId, Date begindate, Date enddate) {
         try {
             List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySave_UserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(userId,begindate,enddate);
@@ -164,7 +174,6 @@ public class ActivityDoneService {
 
     public List<ActivityDone> getActivitiesDoneByUserIdAndDateAndActivitySaveOnDay(long userId, Date date) {
         try {
-            LOGGER.info("day : {}", calendarService.getDateWithEndOfDay(date));
             List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySave_UserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(userId,date,calendarService.getDateWithEndOfDay(date));
             DayEnum day = calendarService.getDayFromDate(date);
             List<ActivitySave> activitySaveList = activitySaveService.getSaveByUserIdAndDay(userId,day);
@@ -187,7 +196,7 @@ public class ActivityDoneService {
                 activityProgressDTOList.add(new ActivityProgressDTO(
                     activityDoneWtActivitySaveDTO,
                         progressByActIdAndUserIDBeginEndDate(activityDone.getActivitySave().getActivity().getId(), userId,calendarService.getDateOfFirstDayOfWeek(date), calendarService.getDateOfLastDayOfWeek(date)),
-                    1));
+                        numberOfActivityFinishedBetweenDates(activityDone.getActivitySave().getActivity().getId(), userId,calendarService.getDateOfFirstDayOfWeek(date), calendarService.getDateOfLastDayOfWeek(date)) ));
             });
             return activityProgressDTOList;
         }catch (RuntimeException exception){
