@@ -36,7 +36,7 @@ public class ActivitySaveService {
         try {
             this.activitySaveRepository.save(activitySave);
         }catch (RuntimeException exception){
-            throw new RuntimeException("Error adding user");
+            throw new RuntimeException("Error adding a new activity save");
         }
     }
 

@@ -46,8 +46,8 @@ public class ActivitySaveController {
     @PostMapping("/save")
     public ResponseEntity<String> addSave(@RequestBody ActivitySave activitySave){
         try {
-            LOGGER.info("Saving activity save: {}", activitySave);
             activitySaveService.addSave(activitySave);
+            LOGGER.info("Saving activity save: {}", activitySave);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding user");
         }
