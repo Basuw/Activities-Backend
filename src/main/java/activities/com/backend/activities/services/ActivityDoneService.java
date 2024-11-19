@@ -49,11 +49,12 @@ public class ActivityDoneService {
         }
     }
 
-    public ActivityDone addAchieve(ActivityDone activityDone, Date date){
+    public ActivityProgressDTO addAchieve(ActivityDone activityDone, Date date){
         try {
             LOGGER.info("date : {}", date);
             activityDone.setDoneOn(date);
-            return this.activityDoneRepository.save(activityDone);
+            ActivityDone activityDoneSave= this.activityDoneRepository.save(activityDone);
+            return activityProgressDTOFromActivityDone(activityDoneSave,activityDone.getActivitySave().getUser().getId(),date);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding user");
         }
@@ -157,7 +158,7 @@ public class ActivityDoneService {
         }
     }
 
-    public ActivityDone updateAchieve(long id, float achievement, StatusEnum status, int mark, String notes, Date doneOn, Date duration) {
+    public ActivityProgressDTO updateAchieve(long id, float achievement, StatusEnum status, int mark, String notes, Date doneOn, Date duration) {
         try {
             ActivityDone activityDone = activityDoneRepository.findById(id);
             activityDone.setStatus(status);
@@ -166,7 +167,8 @@ public class ActivityDoneService {
             activityDone.setMark(mark);
             activityDone.setNotes(notes);
             activityDone.setDoneOn(doneOn);
-            return activityDoneRepository.save(activityDone);
+            ActivityDone activityDoneSave = activityDoneRepository.save(activityDone);
+            return activityProgressDTOFromActivityDone(activityDoneSave,activityDone.getActivitySave().getUser().getId(),doneOn);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error updating achieve");
         }
@@ -188,20 +190,30 @@ public class ActivityDoneService {
     public List<ActivityProgressDTO> getWeekActivitiesByUserIdAndDate(long userId, Date date) {
         try {
             List<ActivityDone> activityDoneList = this.getActivitiesDoneByUserIdAndDateAndActivitySaveOnDay(userId,date);
-            List<ActivityProgressDTO> activityProgressDTOList = new ArrayList<>();
-            activityDoneList.forEach(activityDone -> {
-                ActivityDTO activityDTO = ActivityMapper.INSTANCE.toDto(activityDone.getActivitySave().getActivity());
-                ActivitySaveWtActivityDTO activitySaveWtActivityDTO = new ActivitySaveWtActivityDTO(activityDone.getActivitySave(),activityDTO);
-                ActivityDoneWtActivitySaveDTO activityDoneWtActivitySaveDTO = new ActivityDoneWtActivitySaveDTO(activityDone,activitySaveWtActivityDTO);
-                activityProgressDTOList.add(new ActivityProgressDTO(
-                    activityDoneWtActivitySaveDTO,
-                        progressByActIdAndUserIDBeginEndDate(activityDone.getActivitySave().getActivity().getId(), userId,calendarService.getDateOfFirstDayOfWeek(date), calendarService.getDateOfLastDayOfWeek(date)),
-                        numberOfActivityFinishedBetweenDates(activityDone.getActivitySave().getActivity().getId(), userId,calendarService.getDateOfFirstDayOfWeek(date), calendarService.getDateOfLastDayOfWeek(date)) ));
-            });
-            return activityProgressDTOList;
+
+            return activityProgressDTOListFromActivityDoneList(activityDoneList,userId,date);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting week activities "+ exception.getMessage());
         }
+    }
+
+    public List<ActivityProgressDTO> activityProgressDTOListFromActivityDoneList(List<ActivityDone> activityDoneList, long userId, Date date) {
+        List<ActivityProgressDTO> activityProgressDTOList = new ArrayList<>();
+        activityDoneList.forEach(activityDone -> activityProgressDTOList.add(activityProgressDTOFromActivityDone(activityDone,userId,date)));
+        return activityProgressDTOList;
+    }
+
+    public ActivityProgressDTO activityProgressDTOFromActivityDone(ActivityDone activityDone, long userId, Date date) {
+        //TO DTOs
+        ActivityDTO activityDTO = ActivityMapper.INSTANCE.toDto(activityDone.getActivitySave().getActivity());
+        ActivitySaveWtActivityDTO activitySaveWtActivityDTO = new ActivitySaveWtActivityDTO(activityDone.getActivitySave(),activityDTO);
+        ActivityDoneWtActivitySaveDTO activityDoneWtActivitySaveDTO = new ActivityDoneWtActivitySaveDTO(activityDone,activitySaveWtActivityDTO);
+
+        return new ActivityProgressDTO(
+                activityDoneWtActivitySaveDTO,
+                progressByActIdAndUserIDBeginEndDate(activityDone.getActivitySave().getActivity().getId(), userId,calendarService.getDateOfFirstDayOfWeek(date), calendarService.getDateOfLastDayOfWeek(date)),
+                numberOfActivityFinishedBetweenDates(activityDone.getActivitySave().getActivity().getId(), userId,calendarService.getDateOfFirstDayOfWeek(date), calendarService.getDateOfLastDayOfWeek(date))
+        );
     }
 
     public List<ActivityDone> saveToDone(List<ActivitySave> activitySaveList, List<ActivityDone> activityDoneList) {

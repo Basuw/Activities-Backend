@@ -75,7 +75,7 @@ public class ActivityDoneController {
 
     @PostMapping("/achieve")
     @ApiOperation("Add activity done")
-    public ResponseEntity<ActivityDone> addAchieve(@RequestBody ActivityDone activityDone, @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd HH:mm:ss") Date doneOn){
+    public ResponseEntity<ActivityProgressDTO> addAchieve(@RequestBody ActivityDone activityDone, @RequestParam @DateTimeFormat(pattern= "yyyy-MM-dd HH:mm:ss") Date doneOn){
         try {
             LOGGER.info("Saving activity done: {}", activityDone);
             return  ResponseEntity.ok().body(activityDoneService.addAchieve(activityDone, doneOn));
@@ -86,7 +86,7 @@ public class ActivityDoneController {
 
     @PatchMapping("/achieve/{id}")
     @ApiOperation("update status and duration of activity done")
-    public ResponseEntity<ActivityDone> updateAchieve(@PathVariable long id,
+    public ResponseEntity<ActivityProgressDTO> updateAchieve(@PathVariable long id,
                                                       @RequestParam(required = false)  Float achievement,
                                                       @RequestParam(required = false) StatusEnum status,
                                                       @RequestParam(required = false) Integer mark,
