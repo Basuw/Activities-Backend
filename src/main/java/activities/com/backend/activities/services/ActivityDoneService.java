@@ -35,7 +35,7 @@ public class ActivityDoneService {
 
     public List<ActivityDone> getAllAchieve(){
         try {
-            return this.activityDoneRepository.findAll();
+            return activityDoneRepository.findAll();
         }catch (RuntimeException exception){
             throw new RuntimeException("Error getting all achieve by user");
         }
@@ -53,10 +53,11 @@ public class ActivityDoneService {
         try {
             LOGGER.info("date : {}", date);
             activityDone.setDoneOn(date);
-            ActivityDone activityDoneSave= this.activityDoneRepository.save(activityDone);
-            return activityProgressDTOFromActivityDone(activityDoneSave,activityDone.getActivitySave().getUser().getId(),date);
+            ActivitySave activitySave = activitySaveService.getSaveById(activityDone.getActivitySave().getId());
+            activityDone.setActivitySave(activitySave);
+            return activityProgressDTOFromActivityDone(activityDoneRepository.save(activityDone),activityDone.getActivitySave().getUser().getId(),date);
         }catch (RuntimeException exception){
-            throw new RuntimeException("Error adding user");
+            throw new RuntimeException("Error processing save");
         }
     }
 
@@ -167,8 +168,9 @@ public class ActivityDoneService {
             activityDone.setMark(mark);
             activityDone.setNotes(notes);
             activityDone.setDoneOn(doneOn);
-            ActivityDone activityDoneSave = activityDoneRepository.save(activityDone);
-            return activityProgressDTOFromActivityDone(activityDoneSave,activityDone.getActivitySave().getUser().getId(),doneOn);
+            ActivitySave activitySave = activitySaveService.getSaveById(activityDone.getActivitySave().getId());
+            activityDone.setActivitySave(activitySave);
+            return activityProgressDTOFromActivityDone(activityDoneRepository.save(activityDone),activityDone.getActivitySave().getUser().getId(),doneOn);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error updating achieve");
         }
