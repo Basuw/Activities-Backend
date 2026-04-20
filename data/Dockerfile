@@ -1,10 +1,8 @@
 # Utilise l'image de base officielle PostgreSQL
-FROM postgres:latest
+FROM postgres:16-alpine
 
-# Définit les variables d'environnement
-ENV POSTGRES_DB='Activities'
-ENV POSTGRES_USER=$DBUSER
-ENV POSTGRES_PASSWORD=$DBPSWD
+# Les variables d'environnement seront définies par docker-compose
+# POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD
 
 # Copie les fichiers d'initialisation SQL dans le conteneur
 COPY init.sql /docker-entrypoint-initdb.d/

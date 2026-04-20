@@ -150,19 +150,19 @@ CREATE SEQUENCE public.user_sequence
 
 -- Insertion
 
-INSERT INTO public.user VALUES (nextval('public.user_sequence'), 'user1', 'admin','email@admin.fr','admin1234', '2021-01-01', '1990-01-01', 80, 180, 15);
+INSERT INTO public.user VALUES (nextval('public.user_sequence'), 'user1', 'email@admin.fr', 'admin1234', 'admin', '2021-01-01', '1990-01-01', 80, 180, 15, 75);
 
 INSERT INTO activities.activity VALUES (nextval('activities.activity_sequence'), 'activity1', 'icon1', 'unity1', 'description1','category1');
 INSERT INTO activities.activity VALUES (nextval('activities.activity_sequence'), 'activity2', 'icon2', 'unity2', 'description2','category2');
 INSERT INTO activities.activity VALUES (nextval('activities.activity_sequence'), 'activity3', 'icon3', 'unity3', 'description3','category3');
 
-INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 1, 1, 3, 5,3,"Felt bad");
-INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 2, 1, 2, 3,5,"Nice feelings");
-INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 3, 1, 1, 1, 1,"worst experience of my life");
+INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 1, 1, 3, 5, 3, 'Felt bad', '2021-01-01 10:00:00', '2021-01-01');
+INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 2, 1, 2, 3, 5, 'Nice feelings', '2021-01-02 10:00:00', '2021-01-02');
+INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 3, 1, 1, 1, 1, 'worst experience of my life', '2021-01-03 10:00:00', '2021-01-03');
 
-INSERT INTO activities.activity_done VALUES (nextval('activities.activity_done_sequence'), '2021-01-01', 5,1);
-INSERT INTO activities.activity_done VALUES (nextval('activities.activity_done_sequence'), '2021-01-02', 3,2);
-INSERT INTO activities.activity_done VALUES (nextval('activities.activity_done_sequence'), '2021-01-03', 1,3);
+INSERT INTO activities.activity_done VALUES (nextval('activities.activity_done_sequence'), '2021-01-01', 5, 1, '01:00:00', 'DONE');
+INSERT INTO activities.activity_done VALUES (nextval('activities.activity_done_sequence'), '2021-01-02', 3, 2, '00:45:00', 'DONE');
+INSERT INTO activities.activity_done VALUES (nextval('activities.activity_done_sequence'), '2021-01-03', 1, 3, '00:30:00', 'DONE');
 
 INSERT INTO sport.workout VALUES (nextval('sport.workout_sequence'), '2021-01-01', 'sport1', 'sport1 description', 5, 60, 1);
 INSERT INTO sport.workout VALUES (nextval('sport.workout_sequence'), '2021-01-02', 'sport2', 'sport2 description', 3, 45, 1);
@@ -184,6 +184,6 @@ INSERT INTO nutrition.meal VALUES (nextval('nutrition.meal_sequence'), '2021-01-
 INSERT INTO nutrition.meal VALUES (nextval('nutrition.meal_sequence'), '2021-01-02', 1);
 INSERT INTO nutrition.meal VALUES (nextval('nutrition.meal_sequence'), '2021-01-03', 1);
 
-INSERT INTO nutrition.eaten VALUES (nextval('nutrition.eaten_sequence'), 1, 100);
-INSERT INTO nutrition.eaten VALUES (nextval('nutrition.eaten_sequence'), 2, 200);
-INSERT INTO nutrition.eaten VALUES (nextval('nutrition.eaten_sequence'), 3, 300);
+INSERT INTO nutrition.eaten VALUES (1, 1, 100);
+INSERT INTO nutrition.eaten VALUES (2, 2, 200);
+INSERT INTO nutrition.eaten VALUES (3, 3, 300);
