@@ -28,8 +28,8 @@ public class User {
     private Date createdOn;
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date birthDate;
-    private float weight;
-    private float height;
-    private float fat;
-    private float targetWeight;
+    private Float weight;
+    private Float height;
+    private Float fat;
+    private Float targetWeight;
 }
