@@ -1,11 +1,13 @@
 package activities.com.backend.activities.controllers;
 
+import activities.com.backend.activities.dto.LoginRequestDTO;
 import activities.com.backend.activities.models.User;
 import activities.com.backend.activities.services.ActivityDoneService;
 import activities.com.backend.activities.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +52,17 @@ public class UserController {
             return ResponseEntity.ok().body(userService.addUser(user));
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding user");
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@RequestBody LoginRequestDTO request) {
+        try {
+            LOGGER.info("Login attempt for mail: {}", request.getMail());
+            User user = userService.login(request.getMail(), request.getPassword());
+            return ResponseEntity.ok().body(user);
+        } catch (RuntimeException exception) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 

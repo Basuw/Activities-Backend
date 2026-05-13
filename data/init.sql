@@ -1,8 +1,9 @@
---  Sequence creation
+-- Schema creation
 CREATE SCHEMA activities;
 CREATE SCHEMA sport;
 CREATE SCHEMA nutrition;
 
+-- Tables
 CREATE TABLE public.user (
     id INTEGER PRIMARY KEY,
     username VARCHAR,
@@ -18,12 +19,14 @@ CREATE TABLE public.user (
 );
 
 CREATE TABLE activities.activity (
-       id INTEGER PRIMARY KEY,
-       name VARCHAR,
-       icon VARCHAR,
-       unity VARCHAR,
-       description VARCHAR,
-        category VARCHAR
+    id INTEGER PRIMARY KEY,
+    name VARCHAR,
+    icon VARCHAR,
+    unity VARCHAR,
+    description VARCHAR,
+    category VARCHAR,
+    user_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES public.user (id)
 );
 
 CREATE TABLE activities.category (
@@ -33,10 +36,15 @@ CREATE TABLE activities.category (
     description VARCHAR
 );
 
+CREATE TABLE activities.activity_save_group (
+    id INTEGER PRIMARY KEY
+);
+
 CREATE TABLE activities.activity_save (
     id INTEGER PRIMARY KEY,
     activity_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
+    activity_save_group_id INTEGER NOT NULL,
     frequency INTEGER,
     objective INTEGER,
     mark INTEGER,
@@ -44,7 +52,8 @@ CREATE TABLE activities.activity_save (
     time TIMESTAMP,
     day TIMESTAMP,
     FOREIGN KEY (activity_id) REFERENCES activities.activity (id),
-    FOREIGN KEY (user_id) REFERENCES public.user (id)
+    FOREIGN KEY (user_id) REFERENCES public.user (id),
+    FOREIGN KEY (activity_save_group_id) REFERENCES activities.activity_save_group (id)
 );
 
 CREATE TABLE activities.activity_done (
@@ -108,82 +117,150 @@ CREATE TABLE nutrition.eaten (
     FOREIGN KEY (food_id) REFERENCES nutrition.food (id)
 );
 
-CREATE SEQUENCE nutrition.eaten_sequence
-    START WITH 1
-    INCREMENT BY 1;
+-- Sequences
+CREATE SEQUENCE nutrition.eaten_sequence    START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE nutrition.meal_sequence     START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE nutrition.food_sequence     START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE sport.exercise_sequence     START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE sport.serie_sequence        START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE sport.workout_sequence      START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE activities.activity_sequence      START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE activities.activity_save_group_sequence START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE activities.activity_save_sequence START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE activities.activity_done_sequence START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE public.user_sequence        START WITH 1 INCREMENT BY 1;
 
-CREATE SEQUENCE nutrition.meal_sequence
-    START WITH 1
-    INCREMENT BY 1;
+-- ========================
+-- USERS
+-- ========================
+-- Password is SHA-256 hash of "admin1234"
+INSERT INTO public.user VALUES (nextval('public.user_sequence'), 'Bastien', 'bastien@gmail.com', 'ac9689e2272427085e35b9d3e3e8bed88cb3434828b43b86fc0596cad4c6e270', 'admin', '2021-01-01', '1995-06-15', 73.4, 1.75, 15, 70);
 
-CREATE SEQUENCE nutrition.food_sequence
-    START WITH 1
-    INCREMENT BY 1;
+-- ========================
+-- ACTIVITIES (common — user_id NULL = available to all)
+-- ========================
 
-CREATE SEQUENCE sport.exercise_sequence
-    START WITH 1
-    INCREMENT BY 1;
+-- Fitness
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Running', 'run-fast', 'km', 'Outdoor or treadmill running', 'Fitness');
 
-CREATE SEQUENCE sport.serie_sequence
-    START WITH 1
-    INCREMENT BY 1;
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Swimming', 'swim', 'laps', 'Pool or open water swimming', 'Fitness');
 
-CREATE SEQUENCE sport.workout_sequence
-    START WITH 1
-    INCREMENT BY 1;
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Cycling', 'bike', 'km', 'Road or mountain biking', 'Fitness');
 
-CREATE SEQUENCE activities.activity_sequence
-    START WITH 1
-    INCREMENT BY 1;
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Weight Training', 'weight-lifter', 'sets', 'Strength and resistance training', 'Fitness');
 
-CREATE SEQUENCE activities.activity_save_sequence
-    START WITH 1
-    INCREMENT BY 1;
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Yoga', 'yoga', 'min', 'Yoga practice and flexibility', 'Fitness');
 
-CREATE SEQUENCE activities.activity_done_sequence
-    START WITH 1
-    INCREMENT BY 1;
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Walking', 'walk', 'steps', 'Daily walking or hiking', 'Fitness');
 
-CREATE SEQUENCE public.user_sequence
-    START WITH 1
-    INCREMENT BY 1;
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Hiking', 'hiking', 'km', 'Trail hiking in nature', 'Fitness');
 
--- Insertion
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Rowing', 'rowing', 'min', 'Rowing machine or on water', 'Fitness');
 
-INSERT INTO public.user VALUES (nextval('public.user_sequence'), 'user1', 'email@admin.fr', 'admin1234', 'admin', '2021-01-01', '1990-01-01', 80, 180, 15, 75);
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Jump Rope', 'jump-rope', 'min', 'Skipping rope cardio', 'Fitness');
 
-INSERT INTO activities.activity VALUES (nextval('activities.activity_sequence'), 'activity1', 'icon1', 'unity1', 'description1','category1');
-INSERT INTO activities.activity VALUES (nextval('activities.activity_sequence'), 'activity2', 'icon2', 'unity2', 'description2','category2');
-INSERT INTO activities.activity VALUES (nextval('activities.activity_sequence'), 'activity3', 'icon3', 'unity3', 'description3','category3');
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Push Ups', 'arm-flex', 'reps', 'Bodyweight push-up sets', 'Fitness');
 
-INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 1, 1, 3, 5, 3, 'Felt bad', '2021-01-01 10:00:00', '2021-01-01');
-INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 2, 1, 2, 3, 5, 'Nice feelings', '2021-01-02 10:00:00', '2021-01-02');
-INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 3, 1, 1, 1, 1, 'worst experience of my life', '2021-01-03 10:00:00', '2021-01-03');
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Basketball', 'basketball', 'min', 'Basketball game or practice', 'Fitness');
 
-INSERT INTO activities.activity_done VALUES (nextval('activities.activity_done_sequence'), '2021-01-01', 5, 1, '01:00:00', 'DONE');
-INSERT INTO activities.activity_done VALUES (nextval('activities.activity_done_sequence'), '2021-01-02', 3, 2, '00:45:00', 'DONE');
-INSERT INTO activities.activity_done VALUES (nextval('activities.activity_done_sequence'), '2021-01-03', 1, 3, '00:30:00', 'DONE');
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Tennis', 'tennis', 'min', 'Tennis singles or doubles', 'Fitness');
 
-INSERT INTO sport.workout VALUES (nextval('sport.workout_sequence'), '2021-01-01', 'sport1', 'sport1 description', 5, 60, 1);
-INSERT INTO sport.workout VALUES (nextval('sport.workout_sequence'), '2021-01-02', 'sport2', 'sport2 description', 3, 45, 1);
-INSERT INTO sport.workout VALUES (nextval('sport.workout_sequence'), '2021-01-03', 'sport3', 'sport3 description', 1, 30, 1);
+-- Health
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Sleep', 'sleep', 'hours', 'Quality sleep tracking', 'Health');
 
-INSERT INTO sport.exercise VALUES (nextval('sport.exercise_sequence'), 'exercise1', 'exercise1 description', 'icon1', 5, 1);
-INSERT INTO sport.exercise VALUES (nextval('sport.exercise_sequence'), 'exercise2', 'exercise2 description', 'icon2', 3, 2);
-INSERT INTO sport.exercise VALUES (nextval('sport.exercise_sequence'), 'exercise3', 'exercise3 description', 'icon3', 1, 3);
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Drink Water', 'cup-water', 'glasses', 'Daily hydration tracking', 'Health');
 
-INSERT INTO sport.serie VALUES (nextval('sport.serie_sequence'), 1, 1);
-INSERT INTO sport.serie VALUES (nextval('sport.serie_sequence'), 2, 2);
-INSERT INTO sport.serie VALUES (nextval('sport.serie_sequence'), 3, 3);
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Stretching', 'human-greeting-variant', 'min', 'Daily stretching routine', 'Health');
 
-INSERT INTO nutrition.food VALUES (nextval('nutrition.food_sequence'), 'food1', 100, 'icon1');
-INSERT INTO nutrition.food VALUES (nextval('nutrition.food_sequence'), 'food2', 200, 'icon2');
-INSERT INTO nutrition.food VALUES (nextval('nutrition.food_sequence'), 'food3', 300, 'icon3');
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Healthy Meal', 'food-apple', 'meals', 'Eat a nutritious meal', 'Health');
 
-INSERT INTO nutrition.meal VALUES (nextval('nutrition.meal_sequence'), '2021-01-01', 1);
-INSERT INTO nutrition.meal VALUES (nextval('nutrition.meal_sequence'), '2021-01-02', 1);
-INSERT INTO nutrition.meal VALUES (nextval('nutrition.meal_sequence'), '2021-01-03', 1);
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'No Alcohol', 'glass-cocktail-off', 'days', 'Alcohol-free day', 'Health');
 
-INSERT INTO nutrition.eaten VALUES (1, 1, 100);
-INSERT INTO nutrition.eaten VALUES (2, 2, 200);
-INSERT INTO nutrition.eaten VALUES (3, 3, 300);
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Cold Shower', 'shower-head', 'min', 'Cold water exposure', 'Health');
+
+-- Mindfulness
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Meditation', 'peace', 'min', 'Mindfulness and meditation', 'Mindfulness');
+
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Journaling', 'notebook-edit', 'entries', 'Daily journal writing', 'Mindfulness');
+
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Gratitude', 'heart', 'items', 'Write what you are grateful for', 'Mindfulness');
+
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Breathing', 'lungs', 'min', 'Breathing exercises', 'Mindfulness');
+
+-- Learning
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Reading', 'book-open-variant', 'pages', 'Books, articles or essays', 'Learning');
+
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Coding', 'code-braces', 'min', 'Programming practice', 'Learning');
+
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Language Practice', 'translate', 'min', 'Foreign language learning', 'Learning');
+
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Online Course', 'laptop', 'min', 'E-learning and video courses', 'Learning');
+
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Podcast', 'podcast', 'episodes', 'Educational or inspiring podcasts', 'Learning');
+
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Flashcards', 'cards-playing-outline', 'cards', 'Spaced repetition study cards', 'Learning');
+
+-- Creative
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Drawing', 'pencil-box', 'min', 'Sketching or digital drawing', 'Creative');
+
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Music Practice', 'music', 'min', 'Instrument or vocal practice', 'Creative');
+
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Photography', 'camera', 'photos', 'Photography outing or project', 'Creative');
+
+INSERT INTO activities.activity (id, name, icon, unity, description, category)
+VALUES (nextval('activities.activity_sequence'), 'Writing', 'pencil', 'words', 'Creative writing or blogging', 'Creative');
+
+
+INSERT INTO activities.activity_save_group VALUES (nextval('activities.activity_save_group_sequence'));
+INSERT INTO activities.activity_save_group VALUES (nextval('activities.activity_save_group_sequence'));
+INSERT INTO activities.activity_save_group VALUES (nextval('activities.activity_save_group_sequence'));
+
+-- ========================
+-- ACTIVITY SAVES (user 1 subscribes to some common activities)
+-- Running: 3 times/week, objective 5km
+INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 1, 1,1, 3, 5, NULL, NULL, NULL, NULL);
+-- Reading: 5 times/week, objective 30 pages
+INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 23, 1,2, 5, 30, NULL, NULL, NULL, NULL);
+-- Meditation: 7 times/week, objective 10 min
+INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 19, 1, 3, 10, NULL, NULL, NULL, NULL);
+
+-- Sport
+INSERT INTO sport.workout VALUES (nextval('sport.workout_sequence'), '2024-01-01', 'Morning session', 'Full body workout', 4, 45, 1);
+INSERT INTO sport.exercise VALUES (nextval('sport.exercise_sequence'), 'Bench Press', 'Chest press on flat bench', 'weight-lifter', 4, 1);
+INSERT INTO sport.serie VALUES (nextval('sport.serie_sequence'), 3, 1);
+
+-- Nutrition
+INSERT INTO nutrition.food VALUES (nextval('nutrition.food_sequence'), 'Apple', 52, 'food-apple');
+INSERT INTO nutrition.food VALUES (nextval('nutrition.food_sequence'), 'Chicken Breast', 165, 'food-drumstick');
+INSERT INTO nutrition.food VALUES (nextval('nutrition.food_sequence'), 'Brown Rice', 218, 'rice');

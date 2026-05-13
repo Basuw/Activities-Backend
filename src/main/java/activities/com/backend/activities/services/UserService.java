@@ -45,4 +45,12 @@ public class UserService {
             throw new RuntimeException("Error adding user");
         }
     }
+
+    public User login(String mail, String passwordHash) {
+        User user = userRepository.findByMailAndPassword(mail, passwordHash);
+        if (user == null) {
+            throw new RuntimeException("Invalid credentials");
+        }
+        return user;
+    }
 }

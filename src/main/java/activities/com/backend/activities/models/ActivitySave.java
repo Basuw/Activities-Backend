@@ -36,4 +36,8 @@ public class ActivitySave {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "activity_save_group_id", referencedColumnName = "id")
+    private ActivitySaveGroup activitySaveGroup;
 }

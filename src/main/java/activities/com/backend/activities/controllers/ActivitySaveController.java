@@ -44,15 +44,27 @@ public class ActivitySaveController {
         }
     }
     @PostMapping("/save")
-    public ResponseEntity<String> addSave(@RequestBody ActivitySave activitySave){
+    public ResponseEntity<Void> addSave(@RequestBody ActivitySave activitySave){
         try {
             activitySaveService.addSave(activitySave);
             LOGGER.info("Saving activity save: {}", activitySave);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding user");
         }
-        return ResponseEntity.ok().body("added "+ activitySave);
+        return ResponseEntity.noContent().build();
     }
+    @PatchMapping("/save/{id}")
+    public ResponseEntity<Void> updateSave(@RequestBody ActivitySave activitySave) {
+        try {
+            activitySaveService.updateSave(activitySave);
+            LOGGER.info("Updating activity save: {}", activitySave);
+        } catch (RuntimeException exception) {
+            throw new RuntimeException("Error updating user");
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+
     @DeleteMapping("/save/{id}")
     public ResponseEntity<String> deleteSave(@PathVariable long id){
         try {

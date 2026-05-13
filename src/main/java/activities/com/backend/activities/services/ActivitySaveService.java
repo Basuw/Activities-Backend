@@ -63,4 +63,14 @@ public class ActivitySaveService {
             throw new RuntimeException("Error getting save by user with id : " + userId);
         }
     }
+
+    public void updateSave(ActivitySave activitySave) {
+        try {
+            if (activitySaveRepository.findById(activitySave.getId())!=null){
+
+            }
+        } catch (RuntimeException exception) {
+            throw new RuntimeException("Error getting save by user with id : ");
+        }
+    }
 }
