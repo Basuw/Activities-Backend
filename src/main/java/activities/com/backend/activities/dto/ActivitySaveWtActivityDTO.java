@@ -15,6 +15,7 @@ public class ActivitySaveWtActivityDTO {
     private String notes;
     private ActivityDTO activity;
     private int userId;
+    private Integer activitySaveGroupId;
 
     public ActivitySaveWtActivityDTO(ActivitySave activitySave, ActivityDTO activityDTO) {
         this.id = activitySave.getId();
@@ -24,5 +25,8 @@ public class ActivitySaveWtActivityDTO {
         this.day = activitySave.getDay();
         this.notes = activitySave.getNotes();
         this.userId = activitySave.getUser().getId();
+        this.activitySaveGroupId = activitySave.getActivitySaveGroup() != null
+                ? activitySave.getActivitySaveGroup().getId()
+                : null;
     }
 }

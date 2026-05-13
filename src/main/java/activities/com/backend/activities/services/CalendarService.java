@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 @Service
 public class CalendarService {
@@ -17,8 +18,7 @@ public class CalendarService {
     }
 
     public DayEnum getDayFromDate(Date date){
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
-        LOGGER.info("DayEnum : {}", DayEnum.valueOf(sdf.format(date).toUpperCase()));
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE", Locale.ENGLISH);
         return DayEnum.valueOf(sdf.format(date).toUpperCase());
     }
 

@@ -44,13 +44,12 @@ CREATE TABLE activities.activity_save (
     id INTEGER PRIMARY KEY,
     activity_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
-    activity_save_group_id INTEGER NOT NULL,
-    frequency INTEGER,
-    objective INTEGER,
-    mark INTEGER,
+    activity_save_group_id INTEGER,
+    frequency FLOAT,
+    objective FLOAT,
     notes VARCHAR,
     time TIMESTAMP,
-    day TIMESTAMP,
+    day VARCHAR,
     FOREIGN KEY (activity_id) REFERENCES activities.activity (id),
     FOREIGN KEY (user_id) REFERENCES public.user (id),
     FOREIGN KEY (activity_save_group_id) REFERENCES activities.activity_save_group (id)
@@ -59,10 +58,12 @@ CREATE TABLE activities.activity_save (
 CREATE TABLE activities.activity_done (
     id INTEGER PRIMARY KEY,
     done_on TIMESTAMP,
-    achievement INTEGER,
+    achievement FLOAT,
     activity_save_id INTEGER,
     duration TIMESTAMP,
     status VARCHAR,
+    mark INTEGER,
+    notes VARCHAR,
     FOREIGN KEY (activity_save_id) REFERENCES activities.activity_save (id)
 );
 
@@ -129,16 +130,6 @@ CREATE SEQUENCE activities.activity_save_group_sequence START WITH 1 INCREMENT B
 CREATE SEQUENCE activities.activity_save_sequence START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE activities.activity_done_sequence START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE public.user_sequence        START WITH 1 INCREMENT BY 1;
-
--- ========================
--- USERS
--- ========================
--- Password is SHA-256 hash of "admin1234"
-INSERT INTO public.user VALUES (nextval('public.user_sequence'), 'Bastien', 'bastien@gmail.com', 'ac9689e2272427085e35b9d3e3e8bed88cb3434828b43b86fc0596cad4c6e270', 'admin', '2021-01-01', '1995-06-15', 73.4, 1.75, 15, 70);
-
--- ========================
--- ACTIVITIES (common — user_id NULL = available to all)
--- ========================
 
 -- Fitness
 INSERT INTO activities.activity (id, name, icon, unity, description, category)
@@ -240,27 +231,3 @@ VALUES (nextval('activities.activity_sequence'), 'Photography', 'camera', 'photo
 
 INSERT INTO activities.activity (id, name, icon, unity, description, category)
 VALUES (nextval('activities.activity_sequence'), 'Writing', 'pencil', 'words', 'Creative writing or blogging', 'Creative');
-
-
-INSERT INTO activities.activity_save_group VALUES (nextval('activities.activity_save_group_sequence'));
-INSERT INTO activities.activity_save_group VALUES (nextval('activities.activity_save_group_sequence'));
-INSERT INTO activities.activity_save_group VALUES (nextval('activities.activity_save_group_sequence'));
-
--- ========================
--- ACTIVITY SAVES (user 1 subscribes to some common activities)
--- Running: 3 times/week, objective 5km
-INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 1, 1,1, 3, 5, NULL, NULL, NULL, NULL);
--- Reading: 5 times/week, objective 30 pages
-INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 23, 1,2, 5, 30, NULL, NULL, NULL, NULL);
--- Meditation: 7 times/week, objective 10 min
-INSERT INTO activities.activity_save VALUES (nextval('activities.activity_save_sequence'), 19, 1, 3, 10, NULL, NULL, NULL, NULL);
-
--- Sport
-INSERT INTO sport.workout VALUES (nextval('sport.workout_sequence'), '2024-01-01', 'Morning session', 'Full body workout', 4, 45, 1);
-INSERT INTO sport.exercise VALUES (nextval('sport.exercise_sequence'), 'Bench Press', 'Chest press on flat bench', 'weight-lifter', 4, 1);
-INSERT INTO sport.serie VALUES (nextval('sport.serie_sequence'), 3, 1);
-
--- Nutrition
-INSERT INTO nutrition.food VALUES (nextval('nutrition.food_sequence'), 'Apple', 52, 'food-apple');
-INSERT INTO nutrition.food VALUES (nextval('nutrition.food_sequence'), 'Chicken Breast', 165, 'food-drumstick');
-INSERT INTO nutrition.food VALUES (nextval('nutrition.food_sequence'), 'Brown Rice', 218, 'rice');

@@ -14,4 +14,6 @@ public interface ActivitySaveRepository extends CrudRepository<ActivitySave, Lon
     List<ActivitySave> findAllByUserId(int userId);
 
     List<ActivitySave> findAllByUserIdAndDay(long userId, DayEnum day);
+
+    List<ActivitySave> findAllByActivitySaveGroupId(long id);
 }

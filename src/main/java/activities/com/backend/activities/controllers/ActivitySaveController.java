@@ -43,8 +43,18 @@ public class ActivitySaveController {
             throw new RuntimeException("Error getting save with id : "+id);
         }
     }
+
+    @GetMapping("/save_by_group/{id}")
+    public ResponseEntity<List<ActivitySave>> getSaveByGroupId(@PathVariable long id){
+        try {
+            return ResponseEntity.ok().body(activitySaveService.getSaveByGroupId(id));
+        }catch (RuntimeException exception){
+            throw new RuntimeException("Error getting activities save by group id : "+id);
+        }
+    }
+
     @PostMapping("/save")
-    public ResponseEntity<Void> addSave(@RequestBody ActivitySave activitySave){
+    public ResponseEntity<Void> addSave(@RequestBody List<ActivitySave> activitySave){
         try {
             activitySaveService.addSave(activitySave);
             LOGGER.info("Saving activity save: {}", activitySave);
@@ -54,9 +64,9 @@ public class ActivitySaveController {
         return ResponseEntity.noContent().build();
     }
     @PatchMapping("/save/{id}")
-    public ResponseEntity<Void> updateSave(@RequestBody ActivitySave activitySave) {
+    public ResponseEntity<Void> updateSave(@PathVariable long id, @RequestBody ActivitySave activitySave) {
         try {
-            activitySaveService.updateSave(activitySave);
+            activitySaveService.updateSave(id, activitySave);
             LOGGER.info("Updating activity save: {}", activitySave);
         } catch (RuntimeException exception) {
             throw new RuntimeException("Error updating user");
