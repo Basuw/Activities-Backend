@@ -23,7 +23,7 @@ public class ActivityDoneWtActivitySaveDTO {
         this.id = activityDone.getId();
         this.achievement = activityDone.getAchievement();
         this.doneOn = activityDone.getDoneOn();
-        this.activitySave = activitySaveWtActivityDTO;
+        this.activitySave = activitySaveWtActivityDTO; // peut être null si le save a été supprimé
         this.mark = activityDone.getMark();
         this.notes = activityDone.getNotes();
         this.status = activityDone.getStatus();

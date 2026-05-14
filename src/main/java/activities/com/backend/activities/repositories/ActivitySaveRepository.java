@@ -15,5 +15,11 @@ public interface ActivitySaveRepository extends CrudRepository<ActivitySave, Lon
 
     List<ActivitySave> findAllByUserIdAndDay(long userId, DayEnum day);
 
+    /** Uniquement les saves actifs — utilisé pour construire les activités de la journée */
+    List<ActivitySave> findAllByUserIdAndDayAndActiveIsTrue(long userId, DayEnum day);
+
     List<ActivitySave> findAllByActivitySaveGroupId(long id);
+
+    /** Saves actifs du groupe — utilisé pour le modal d'édition */
+    List<ActivitySave> findAllByActivitySaveGroupIdAndActiveIsTrue(long id);
 }

@@ -50,6 +50,7 @@ CREATE TABLE activities.activity_save (
     notes VARCHAR,
     time TIMESTAMP,
     day VARCHAR,
+    active BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (activity_id) REFERENCES activities.activity (id),
     FOREIGN KEY (user_id) REFERENCES public.user (id),
     FOREIGN KEY (activity_save_group_id) REFERENCES activities.activity_save_group (id)

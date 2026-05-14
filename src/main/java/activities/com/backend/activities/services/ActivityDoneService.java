@@ -55,10 +55,37 @@ public class ActivityDoneService {
             activityDone.setDoneOn(date);
             ActivitySave activitySave = activitySaveService.getSaveById(activityDone.getActivitySave().getId());
             activityDone.setActivitySave(activitySave);
-            return activityProgressDTOFromActivityDone(activityDoneRepository.save(activityDone),activityDone.getActivitySave().getUser().getId(),date);
+            return activityProgressDTOFromActivityDone(activityDoneRepository.save(activityDone), activityDone.getActivitySave().getUser().getId(), date);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error processing save");
         }
+    }
+
+    /**
+     * Reporte une ActivityDone :
+     * - Passe la done courante en POSTPONED
+     * - Crée une nouvelle ActivityDone pour targetDate (NOT_STARTED, achievement=0)
+     * - Retourne la done courante (POSTPONED) pour mise à jour du mobile
+     */
+    public ActivityProgressDTO postponeAchieve(long id, Date targetDate) {
+        ActivityDone activityDone = activityDoneRepository.findById(id);
+        if (activityDone == null) throw new RuntimeException("ActivityDone not found: " + id);
+
+        // 1. Passer en POSTPONED
+        activityDone.setStatus(StatusEnum.POSTPONED);
+        ActivityDone saved = activityDoneRepository.save(activityDone);
+
+        // 2. Créer la done du lendemain
+        ActivityDone nextDone = new ActivityDone();
+        nextDone.setActivitySave(activityDone.getActivitySave());
+        nextDone.setDoneOn(targetDate);
+        nextDone.setAchievement(0);
+        nextDone.setStatus(StatusEnum.NOT_STARTED);
+        nextDone.setMark(0);
+        activityDoneRepository.save(nextDone);
+
+        // 3. Retourner la done POSTPONED pour mise à jour immédiate du mobile
+        return activityProgressDTOFromActivityDone(saved, activityDone.getActivitySave().getUser().getId(), activityDone.getDoneOn());
     }
 
     public void deleteAchieve(long id){
@@ -170,7 +197,7 @@ public class ActivityDoneService {
             activityDone.setDoneOn(doneOn);
             ActivitySave activitySave = activitySaveService.getSaveById(activityDone.getActivitySave().getId());
             activityDone.setActivitySave(activitySave);
-            return activityProgressDTOFromActivityDone(activityDoneRepository.save(activityDone),activityDone.getActivitySave().getUser().getId(),doneOn);
+            return activityProgressDTOFromActivityDone(activityDoneRepository.save(activityDone), activityDone.getActivitySave().getUser().getId(), doneOn);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error updating achieve");
         }
@@ -178,7 +205,7 @@ public class ActivityDoneService {
 
     public List<ActivityDone> getActivitiesDoneByUserIdAndDateAndActivitySaveOnDay(long userId, Date date) {
         try {
-            List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySave_UserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(userId,date,calendarService.getDateWithEndOfDay(date));
+            List<ActivityDone> activityDoneList = activityDoneRepository.getAllByActivitySave_UserIdAndDoneOnIsGreaterThanEqualAndDoneOnIsLessThan(userId, date, calendarService.getDateWithEndOfDay(date));
             DayEnum day = calendarService.getDayFromDate(date);
             List<ActivitySave> activitySaveList = activitySaveService.getSaveByUserIdAndDay(userId,day);
             activitySaveList.addAll(activitySaveService.getSaveByUserIdAndDay(userId,null));
@@ -206,15 +233,14 @@ public class ActivityDoneService {
     }
 
     public ActivityProgressDTO activityProgressDTOFromActivityDone(ActivityDone activityDone, long userId, Date date) {
-        //TO DTOs
         ActivityDTO activityDTO = ActivityMapper.INSTANCE.toDto(activityDone.getActivitySave().getActivity());
-        ActivitySaveWtActivityDTO activitySaveWtActivityDTO = new ActivitySaveWtActivityDTO(activityDone.getActivitySave(),activityDTO);
-        ActivityDoneWtActivitySaveDTO activityDoneWtActivitySaveDTO = new ActivityDoneWtActivitySaveDTO(activityDone,activitySaveWtActivityDTO);
+        ActivitySaveWtActivityDTO activitySaveWtActivityDTO = new ActivitySaveWtActivityDTO(activityDone.getActivitySave(), activityDTO);
+        ActivityDoneWtActivitySaveDTO activityDoneWtActivitySaveDTO = new ActivityDoneWtActivitySaveDTO(activityDone, activitySaveWtActivityDTO);
 
         return new ActivityProgressDTO(
                 activityDoneWtActivitySaveDTO,
-                progressByActIdAndUserIDBeginEndDate(activityDone.getActivitySave().getActivity().getId(), userId,calendarService.getDateOfFirstDayOfWeek(date), calendarService.getDateOfLastDayOfWeek(date)),
-                numberOfActivityFinishedBetweenDates(activityDone.getActivitySave().getActivity().getId(), userId,calendarService.getDateOfFirstDayOfWeek(date), calendarService.getDateOfLastDayOfWeek(date))
+                progressByActIdAndUserIDBeginEndDate(activityDone.getActivitySave().getActivity().getId(), userId, calendarService.getDateOfFirstDayOfWeek(date), calendarService.getDateOfLastDayOfWeek(date)),
+                numberOfActivityFinishedBetweenDates(activityDone.getActivitySave().getActivity().getId(), userId, calendarService.getDateOfFirstDayOfWeek(date), calendarService.getDateOfLastDayOfWeek(date))
         );
     }
 

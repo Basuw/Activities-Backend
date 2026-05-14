@@ -110,6 +110,18 @@ public class ActivityDoneController {
         }
     }
 
+    @PostMapping("/achieve/{id}/postpone")
+    @ApiOperation("Reporte une ActivityDone : passe en POSTPONED + crée la done du lendemain")
+    public ResponseEntity<ActivityProgressDTO> postponeAchieve(
+            @PathVariable long id,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date targetDate) {
+        try {
+            return ResponseEntity.ok(activityDoneService.postponeAchieve(id, targetDate));
+        } catch (RuntimeException exception) {
+            throw new RuntimeException("Error postponing achieve: " + exception.getMessage());
+        }
+    }
+
     @DeleteMapping("/achieve/{id}")
     @ApiOperation("Delete activity done")
     public ResponseEntity<String> deleteAchieve(@PathVariable long id){

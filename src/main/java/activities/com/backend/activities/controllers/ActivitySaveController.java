@@ -1,10 +1,8 @@
 package activities.com.backend.activities.controllers;
 
 import activities.com.backend.activities.models.ActivitySave;
-import activities.com.backend.activities.services.ActivityDoneService;
 import activities.com.backend.activities.services.ActivitySaveService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +13,10 @@ import static activities.com.backend.activities.utilities.*;
 
 @RestController
 @RequestMapping(ACTIVITY)
+@Slf4j
 public class ActivitySaveController {
 
     private final ActivitySaveService activitySaveService;
-    private final Logger LOGGER = LoggerFactory.getLogger(ActivityDoneService.class);
 
     @Autowired
     public ActivitySaveController(ActivitySaveService activitySaveService) {
@@ -57,33 +55,32 @@ public class ActivitySaveController {
     public ResponseEntity<Void> addSave(@RequestBody List<ActivitySave> activitySave){
         try {
             activitySaveService.addSave(activitySave);
-            LOGGER.info("Saving activity save: {}", activitySave);
+            log.info("Saving activity save with id: {}", activitySave);
         }catch (RuntimeException exception){
             throw new RuntimeException("Error adding user");
         }
         return ResponseEntity.noContent().build();
     }
+
     @PatchMapping("/save/{id}")
     public ResponseEntity<Void> updateSave(@PathVariable long id, @RequestBody ActivitySave activitySave) {
         try {
             activitySaveService.updateSave(id, activitySave);
-            LOGGER.info("Updating activity save: {}", activitySave);
+            log.info("Updating activity save with id: {}", activitySave.getId());
         } catch (RuntimeException exception) {
-            throw new RuntimeException("Error updating user");
+            throw new RuntimeException("Error updating activity save :",exception.getCause());
         }
         return ResponseEntity.noContent().build();
     }
 
-
     @DeleteMapping("/save/{id}")
-    public ResponseEntity<String> deleteSave(@PathVariable long id){
+    public ResponseEntity<Void> deleteSave(@PathVariable long id){
         try {
-
             activitySaveService.deleteSave(id);
         }catch (RuntimeException exception){
-            throw new RuntimeException("Error adding save");
+            throw new RuntimeException("Error deleting save");
         }
-        return ResponseEntity.ok().body("deleted save with id : "+id);
+        return ResponseEntity.noContent().build();
     }
 
 

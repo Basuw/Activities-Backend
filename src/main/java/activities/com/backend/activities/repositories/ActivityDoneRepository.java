@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 public interface ActivityDoneRepository extends CrudRepository<ActivityDone, Long> {
-    //List<ActivityDone> findByUserId(long userId);
     ActivityDone findById(long id);
 
     @Override

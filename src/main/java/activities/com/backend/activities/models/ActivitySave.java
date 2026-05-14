@@ -39,4 +39,8 @@ public class ActivitySave {
     @ManyToOne
     @JoinColumn(name = "activity_save_group_id", referencedColumnName = "id")
     private ActivitySaveGroup activitySaveGroup;
+
+    /** true = save actif (affiché dans la journée), false = soft-deleted (a des ActivityDones liés) */
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean active = true;
 }
